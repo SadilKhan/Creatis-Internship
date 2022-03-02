@@ -1,23 +1,25 @@
+import argparse
 import numpy as np
 import pandas as pd
 import nibabel as nib
 import os
 import matplotlib.pyplot as plt
+from globalVar import *
+import SimpleITK as sitk
 
-SEG_MASK=np.array(os.listdir("/home/khan/Internship/Dataset/visceral/segmentations"))
 
 def find_segmentation_mask(segDir,patNum):
     """ Finds all the segmentation masks according to Patient Id"""
     
     # Get all the segmentation names
-    segMaskNames=os.listdir(segDir)
+    segMaskNames=np.array(os.listdir(segDir))
 
     # Split the segmentation mask strings
     allSegMaskSpl=[i.split("_") for i in segMaskNames]
     
     # The first item is the patient number
     allIndex=[i for i in range(len(allSegMaskSpl)) if allSegMaskSpl[i][0]==str(patNum)]
-    return allSegMask[allIndex]
+    return segMaskNames[allIndex]
 
 def seg_to_class(segMask):
     """ Seg ID to Class Name"""
@@ -27,28 +29,6 @@ def seg_to_class(segMask):
         return radLexIDDict[Id]
     except:
         return "background"
-
-def visualize(image,segmask):
-    """ Plot Segmentation Mask """
-    plt.figure(figsize=(10,10))
-    plt.imshow(image,cmap="gray")
-    plt.imshow(segmask,cmap="jet",alpha=0.25)
-    plt.show()
-
-def find_pos_organ(segmaskDir):
-    """ Finds 3d Coordinates of the segmentation mask"""
-
-    segMask=nib.load(segmaskDir)
-    segMaskArr=segMask.get_fdata()
-
-    dimension=segMaskArr.shape
-    posList=[]
-
-    for i in range(dimension[-1]):
-        segLayer=segMaskArr[:,:,i]
-        posx,posy=(segLayer>0).nonzero()
-        posList+=list(map(lambda x,y:np.array([x,y,i]),posx,posy))
-    return posList
 
 def transform_to_ras(imageName):
     """ Function to transform Image orientation to RAS """
@@ -111,22 +91,29 @@ def find_cube(segImage):
     return cube
 
 
-def sample_points(point1,point2,num=2000):
+def sample_points(point1,point2,num=4000):
     """ Uniform Point Sampling """
 
-    points=np.linspace(point1,point2,num)
+    points=np.random.uniform(low=point1,high=point2,size=(num,3))
     points=np.round(points)
     points=points.astype(int)
 
     return points
 
-def filter_points(points,segImage):
-    """ Filter those Points which are in segmentation mask """
+def filter_points(points,segImage,prob=0.2,label=1):
+    """ Filter points which are in segmentation mask """
 
     filteredPoints=[]
 
     for x,y,z in points:
         if segImage[x,y,z]>0:
-            filteredPoints.append([x,y,z ])
+            filteredPoints.append([x,y,z,label])
+        # Add some of the background points
+        elif np.random.random()<=prob:
+            filteredPoints.append([x,y,z,"background"])
+
     
     return np.array(filteredPoints)
+
+
+
