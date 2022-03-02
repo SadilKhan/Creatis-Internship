@@ -56,3 +56,74 @@ def find_pos_organ(segmaskDir):
         posx,posy=(segLayer>0).nonzero()
         posList+=list(map(lambda x,y:np.array([x,y,i]),posx,posy))
     return posList
+
+
+def transformToRas(imageName):
+    """ Function to transform Image orientation to RAS """
+
+    image=nib.load(imageName)
+    orientation=nib.aff2axcodes(image.affine)
+
+    if orientation!=('R', 'A', 'S'):
+        fimage=nib.as_closest_canonical(image)
+        return fimage
+    else:
+        print("IMAGE ALREADY IN RAS+ FORMAT")
+        return image
+
+
+
+def findCorners(segImageSlice):
+    """ Finds the bounding box of a 2d organ image"""
+    x,y=(segImageSlice>0).nonzero()
+
+    [x1,y1]=[x[0],np.min(y)]
+    [x2,y2]=[x[-1],np.max(y)]
+
+    return [x1,y1],[x2,y2]
+
+def findCube(segImage):
+    """ Finds Bounding Cube of an object """
+    startIndex=0
+    stopIndex=0
+
+    h,w,d=segImage.shape
+
+    # Finds the position along z axis when the organ mask starts
+    for i in range(d):
+        if (segImage[:,:,i]>0).any():
+            startIndex=i
+            break 
+
+    # Finds the position along z axis when the organ mask ends        
+    for j in range(d-1,0,-1):
+        if (segImage[:,:,j]>0).any():
+            stopIndex=j
+            break   
+    
+    cube=[[np.inf,np.inf,startIndex],[0,0,stopIndex]]
+    
+    for i in range(startIndex,stopIndex+1):
+        A,B=findCorners(segImage[:,:,i])
+
+        for j in range(2):
+            if cube[0][0]>A[0]:
+                cube[0][0]=A[0]
+            if cube[0][1]>A[1]:
+                cube[0][1]=A[1]
+            if cube[1][0]<B[0]:
+                cube[1][0]=B[0]
+            if cube[1][1]<B[1]:
+                cube[1][1]=B[1]
+    
+    return cube
+
+
+def samplePoints(point1,point2,num=2000):
+    """ Uniform Point Sampling """
+
+    points=np.linspace(point1,point2,num)
+    points=np.round(points)
+    points=points.astype(int)
+
+    return points
