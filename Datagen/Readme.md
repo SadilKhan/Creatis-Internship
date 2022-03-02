@@ -9,3 +9,7 @@ numpy, nibabel, pandas
 To create point clouds from visceral dataset
 
 ``` python3 pointcloud.py --imageDir --segDir ```
+
+For help
+
+``` python3 pointcloud.py -h ```
