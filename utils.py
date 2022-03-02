@@ -57,8 +57,7 @@ def find_pos_organ(segmaskDir):
         posList+=list(map(lambda x,y:np.array([x,y,i]),posx,posy))
     return posList
 
-
-def transformToRas(imageName):
+def transform_to_ras(imageName):
     """ Function to transform Image orientation to RAS """
 
     image=nib.load(imageName)
@@ -73,7 +72,7 @@ def transformToRas(imageName):
 
 
 
-def findCorners(segImageSlice):
+def find_corners(segImageSlice):
     """ Finds the bounding box of a 2d organ image"""
     x,y=(segImageSlice>0).nonzero()
 
@@ -82,7 +81,7 @@ def findCorners(segImageSlice):
 
     return [x1,y1],[x2,y2]
 
-def findCube(segImage):
+def find_cube(segImage):
     """ Finds Bounding Cube of an object """
     startIndex=0
     stopIndex=0
@@ -104,7 +103,7 @@ def findCube(segImage):
     cube=[[np.inf,np.inf,startIndex],[0,0,stopIndex]]
     
     for i in range(startIndex,stopIndex+1):
-        A,B=findCorners(segImage[:,:,i])
+        A,B=find_corners(segImage[:,:,i])
 
         for j in range(2):
             if cube[0][0]>A[0]:
@@ -119,7 +118,7 @@ def findCube(segImage):
     return cube
 
 
-def samplePoints(point1,point2,num=2000):
+def sample_points(point1,point2,num=2000):
     """ Uniform Point Sampling """
 
     points=np.linspace(point1,point2,num)
@@ -127,3 +126,14 @@ def samplePoints(point1,point2,num=2000):
     points=points.astype(int)
 
     return points
+
+def filter_points(points,segImage):
+    """ Filter those Points which are in segmentation mask """
+
+    filteredPoints=[]
+
+    for x,y,z in points:
+        if segImage[x,y,z]>0:
+            filteredPoints.append([x,y,z ])
+    
+    return np.array(filteredPoints)
