@@ -11,7 +11,7 @@ Python codes for generating point clouds
 
 To create point clouds from visceral dataset
 
-``` python3 pointcloud.py --imageDir {Image Directory} --segDir {Segmentation Mask Directory}```
+``` python3 pointcloud.py --imageDir {Image Directory} --segDir {Segmentation Mask Directory} --outputDir {Output CSV Directory}```
 
 For help
 
