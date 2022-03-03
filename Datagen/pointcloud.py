@@ -4,21 +4,24 @@ from globalVar import *
 from utils import *
 import pandas as pd
 import argparse
+from tqdm import tqdm
 
 
 
 class PointCloudGen():
     """ Class for sampling point clouds from voxel data """
 
-    def __init__(self,imageDir,segDir):
+    def __init__(self,imageDir,segDir,outputDir):
         """
 
         @input imageDir: string like. The Directory for image
         @input segDir: string like. The directory for Segmentations
+        @input outputDir: string like. The directory where csv file be stored
 
         """
         self.imageDir=imageDir
         self.segDir=segDir
+        self.outputDir=outputDir
 
         self.patNum=self.imageDir.split("/")[-1].split("_")[0]
 
@@ -41,14 +44,16 @@ class PointCloudGen():
 
     def generate_point_cloud(self):
         self.allSegName=find_segmentation_mask(self.segDir,self.patNum)
-        formatSegName=self.allSegName[0].split("_")
+        orgToSeg=dict()
 
         # Get point clouds for every organs and store it in Dataframe
         for organ in ORGAN_CHOICE.keys():
-            codeOrgan=str(ORGAN_CHOICE[organ])  
-            formatSegName[-2]=codeOrgan
-            segMaskName="_".join(formatSegName)
-            segMask=nib.load(self.segDir+"/"+segMaskName)
+            codeOrgan=f"_{ORGAN_CHOICE[organ]}_"
+            # Find segmentation mask for organ with patientID self.patNum
+            for name in self.allSegName:
+                if codeOrgan in name:
+                    break
+            segMask=nib.load(self.segDir+"/"+name)
             segMaskData=segMask.get_fdata()
 
             cube=find_cube(segMaskData)
@@ -61,7 +66,12 @@ class PointCloudGen():
 
     def save(self):
 
-        directory=self.segDir+"/"+self.patNum+"_point_cloud.csv"
+        if self.outputDir=="default":
+            directory=self.segDir
+        else:
+            directory=self.outputDir
+        
+        directory+="/"+self.patNum+"_point_cloud.csv"
         self.organPC.to_csv(directory,index=False)
 
 
@@ -69,12 +79,17 @@ def main():
 
     parser=argparse.ArgumentParser(description="Arguments for Point Cloud Generation")
 
-    parser.add_argument("--imageDir",help="Image Path", required=True)
-    parser.add_argument("--segDir",help="Path for Segmentation Mask",required=True)
+    parser.add_argument("--imageDir",help="Image Directory", required=True)
+    parser.add_argument("--segDir",help="Segmentation Directory",required=True)
+    parser.add_argument("--outputDir",help="Output Directory",default="default")
 
     args=parser.parse_args()
 
-    pc=PointCloudGen(args.imageDir,args.segDir)
+    IMAGE_PATH=args.imageDir
+    allImages=os.listdir(IMAGE_PATH)
+
+    for imName in tqdm(allImages):
+        pc=PointCloudGen(IMAGE_PATH+"/"+imName,args.segDir,args.outputDir)
 
 
 
