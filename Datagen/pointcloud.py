@@ -5,7 +5,7 @@ from utils import *
 import pandas as pd
 import argparse
 from tqdm import tqdm
-
+from calGradient import gradient
 
 
 class PointCloudGen():
@@ -14,14 +14,15 @@ class PointCloudGen():
     def __init__(self,imageDir,segDir,outputDir):
         """
 
-        @input imageDir: string like. The Directory for image
+        @input imageDir: string like. The path for specific image
         @input segDir: string like. The directory for Segmentations
-        @input outputDir: string like. The directory where csv file be stored
 
         """
         self.imageDir=imageDir
         self.segDir=segDir
         self.outputDir=outputDir
+
+        self.gradx,self.grady,self.gradz,self.mag=gradient(self.imageDir)
 
         self.patNum=self.imageDir.split("/")[-1].split("_")[0]
 
@@ -39,7 +40,8 @@ class PointCloudGen():
         self.image=nib.load(self.imageDir)
         self.imageData=self.image.get_fdata()
 
-        self.organPC=pd.DataFrame({"x":[],"y":[],"z":[],"label":[]})
+        self.organPC=pd.DataFrame({"x":[],"y":[],"z":[],"value":[],"grad_x":[],"grad_y"
+        :[],"grad_z":[],"magnitude":[],"label":[]})
         self.segMask=dict()
 
     def generate_point_cloud(self):
@@ -59,9 +61,12 @@ class PointCloudGen():
             cube=find_cube(segMaskData)
 
             points=sample_points(cube[0],cube[1])
-            filtedPoints=filter_points(points,segMaskData,0.2,organ)
-            self.organPC=pd.concat([self.organPC,pd.DataFrame({"x":filtedPoints[:,0],
-            "y":filtedPoints[:,1],"z":filtedPoints[:,2],"label":filtedPoints[:,3]})])
+            filteredPoints=embed_points(points,self.imageData,segMaskData,self.gradx,self.grady,self.gradz,self.mag,0.2,organ)
+
+            self.organPC=pd.concat([self.organPC,pd.DataFrame({"x":filteredPoints[:,0],
+            "y":filteredPoints[:,1],"z":filteredPoints[:,2],"value":filteredPoints[:,3],"gradx":filteredPoints[:,4],
+            "grady":filteredPoints[:,5],"gradz":filteredPoints[:,6],"magnitude":filteredPoints[:,7],
+            "label":filteredPoints[:,8]})])
 
 
     def save(self):
@@ -89,6 +94,7 @@ def main():
     allImages=os.listdir(IMAGE_PATH)
 
     for imName in tqdm(allImages):
+        print(imName)
         pc=PointCloudGen(IMAGE_PATH+"/"+imName,args.segDir,args.outputDir)
 
 
