@@ -1,5 +1,6 @@
 import numpy as np
 import nibabel as nib
+from Datagen.utils import transform_to_ras
 from globalVar import *
 from utils import *
 import pandas as pd
@@ -37,11 +38,10 @@ class PointCloudGen():
 
 
     def initialize(self):
-        self.image=nib.load(self.imageDir)
+        self.image=transform_to_ras(self.imageDir)
         self.imageData=self.image.get_fdata()
 
-        self.organPC=pd.DataFrame({"x":[],"y":[],"z":[],"value":[],"grad_x":[],"grad_y"
-        :[],"grad_z":[],"magnitude":[],"label":[]})
+        self.organPC=pd.DataFrame({"x":[],"y":[],"z":[],"value":[],"magnitude":[],"label":[]})
         self.segMask=dict()
 
     def generate_point_cloud(self):
@@ -55,18 +55,17 @@ class PointCloudGen():
             for name in self.allSegName:
                 if codeOrgan in name:
                     break
-            segMask=nib.load(self.segDir+"/"+name)
+            segMask=transform_to_ras(self.segDir+"/"+name)
             segMaskData=segMask.get_fdata()
 
             cube=find_cube(segMaskData)
 
             points=sample_points(cube[0],cube[1])
-            filteredPoints=embed_points(points,self.imageData,segMaskData,self.gradx,self.grady,self.gradz,self.mag,0.2,organ)
+            filteredPoints=embed_points(points,self.imageData,segMaskData,self.mag,0.15,organ)
 
             self.organPC=pd.concat([self.organPC,pd.DataFrame({"x":filteredPoints[:,0],
-            "y":filteredPoints[:,1],"z":filteredPoints[:,2],"value":filteredPoints[:,3],"gradx":filteredPoints[:,4],
-            "grady":filteredPoints[:,5],"gradz":filteredPoints[:,6],"magnitude":filteredPoints[:,7],
-            "label":filteredPoints[:,8]})])
+            "y":filteredPoints[:,1],"z":filteredPoints[:,2],"value":filteredPoints[:,3],"magnitude":filteredPoints[:,4],
+            "label":filteredPoints[:,5]})])
 
 
     def save(self):
