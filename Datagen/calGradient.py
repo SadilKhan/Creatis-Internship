@@ -1,11 +1,11 @@
 import argparse
 import numpy as np
 import nibabel as nib
-
+from utils import transform_to_ras
 
 def gradient(imageDir,save=False):
 
-    image=nib.load(imageDir)
+    image=transform_to_ras(imageDir)
     imageData=image.get_fdata(image)
 
 
