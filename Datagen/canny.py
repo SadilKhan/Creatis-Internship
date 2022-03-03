@@ -1,30 +1,46 @@
-  
-import SimpleITK as sitk
-import sys
-import os
+#!/usr/bin/env python
+import itk
 import argparse
 
 
+def canny(inputImage,outputImage,variance,lowerT,upperT):
 
-def canny(imageDir,outputDir,variance,lowerT,upperT):
-    image = sitk.Cast(sitk.ReadImage(imageDir), sitk.sitkFloat32)
+    InputPixelType = itk.F
+    OutputPixelType = itk.UC
+    Dimension = 3
 
-    blurfilter=sitk.SmoothingRecursiveGaussianImageFilter()
-    blurfilter.SetSigma(1.4)
-    blurfilter.Execute(image)
+    InputImageType = itk.Image[InputPixelType, Dimension]
+    OutputImageType = itk.Image[OutputPixelType, Dimension]
 
-    edges = sitk.CannyEdgeDetection(image, lowerThreshold=lowerT, upperThreshold=upperT,
-                                    variance=variance)
+    reader = itk.ImageFileReader[InputImageType].New()
+    reader.SetFileName(inputImage)
 
-    writer = sitk.ImageFileWriter()
-    writer.SetFileName(outputDir)
-    writer.Execute(edges)
+    cannyFilter = itk.CannyEdgeDetectionImageFilter[
+        InputImageType,
+        InputImageType].New()
+    cannyFilter.SetInput(reader.GetOutput())
+    cannyFilter.SetVariance(variance)
+    cannyFilter.SetLowerThreshold(lowerT)
+    cannyFilter.SetUpperThreshold(upperT)
+
+    rescaler = itk.RescaleIntensityImageFilter[
+        InputImageType,
+        OutputImageType].New()
+    rescaler.SetInput(cannyFilter.GetOutput())
+    rescaler.SetOutputMinimum(0)
+    rescaler.SetOutputMaximum(255)
+
+    writer = itk.ImageFileWriter[OutputImageType].New()
+    writer.SetFileName(outputImage)
+    writer.SetInput(rescaler.GetOutput())
+
+    writer.Update()
 
 
 def main():
     parser = argparse.ArgumentParser(description="Positional Arguments for Canny Edge Detection")
-    parser.add_argument('--imageDir',type=str,help="Image Directory",required=True)
-    parser.add_argument('--outputDir',type=str,help="Output Directory",required=True)
+    parser.add_argument('--inputImage',type=str,help="Image Directory",required=True)
+    parser.add_argument('--outputImage',type=str,help="Output Directory",required=True)
     parser.add_argument('--variance',type=list,nargs=3,default=[1,1,1])
     parser.add_argument('--lowerT',type=float,default=20,help="Lower threshold for Edge Detection")
     parser.add_argument('--upperT',type=float,default=50,help="Upper threshold for Edge Detection")
@@ -32,12 +48,8 @@ def main():
     args=parser.parse_args()
 
     # Edge Detection
-    canny(args.imageDir,args.outputDir,args.variance,args.lowerT,args.upperT)
+    canny(args.inputImage,args.outputImage,args.variance,args.lowerT,args.upperT)
 
 
-
-if __name__== "__main__":
+if __name__ == "__main__":
     main()
-
-
-
