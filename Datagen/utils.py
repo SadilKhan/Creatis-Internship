@@ -43,52 +43,15 @@ def transform_to_ras(imageName):
         print("IMAGE ALREADY IN RAS+ FORMAT")
         return image
 
-
-
-def find_corners(segImageSlice):
-    """ Finds the bounding box of a 2d organ image"""
-    x,y=(segImageSlice>0).nonzero()
-
-    [x1,y1]=[x[0],np.min(y)]
-    [x2,y2]=[x[-1],np.max(y)]
-
-    return [x1,y1],[x2,y2]
-
 def find_cube(segImage):
-    """ Finds Bounding Cube of an object """
-    startIndex=0
-    stopIndex=0
+    """ Finds Bounding Cube of an segmentation image """
 
-    h,w,d=segImage.shape
+    x,y,z=np.where(segImage>0)
+    A1=np.min(x),np.min(y),np.min(z)
+    A2=np.max(x),np.max(y),np.max(z)
 
-    # Finds the position along z axis when the organ mask starts
-    for i in range(d):
-        if (segImage[:,:,i]>0).any():
-            startIndex=i
-            break 
-
-    # Finds the position along z axis when the organ mask ends        
-    for j in range(d-1,0,-1):
-        if (segImage[:,:,j]>0).any():
-            stopIndex=j
-            break   
     
-    cube=[[np.inf,np.inf,startIndex],[0,0,stopIndex]]
-    
-    for i in range(startIndex,stopIndex+1):
-        A,B=find_corners(segImage[:,:,i])
-
-        for j in range(2):
-            if cube[0][0]>A[0]:
-                cube[0][0]=A[0]
-            if cube[0][1]>A[1]:
-                cube[0][1]=A[1]
-            if cube[1][0]<B[0]:
-                cube[1][0]=B[0]
-            if cube[1][1]<B[1]:
-                cube[1][1]=B[1]
-    
-    return cube
+    return [A1,A2]
 
 
 def sample_points(point1,point2,num=4000):
@@ -150,4 +113,13 @@ def fps(xyz, M):
         dists[cur_dist < dists] = cur_dist[cur_dist < dists]
         inds = torch.max(dists, dim=1)[1]
     return centroids
+
+
+
+
+
+
+
+
+
 
