@@ -63,27 +63,19 @@ def sample_points(point1,point2,num=4000):
 
     return points
 
-def filter_points(points,segImage,prob=0.0,label=1):
-    """ Filter points which are in segmentation mask """
+def embed_points(points,imgData,segImage,gradx,grady,gradz,mag,prob=0.0,label=1):
+    """ Filter and embed points which are in segmentation mask with features"""
 
     filteredPoints=[]
 
     for x,y,z in points:
         if segImage[x,y,z]>0:
-            filteredPoints.append([x,y,z,label])
-        # Add some of the background points
+            filteredPoints.append([x,y,z,imgData[x,y,z],gradx[x,y,z],grady[x,y,z],
+            gradz[x,y,z],mag[x,y,z],label])
+        # Add some of the background points with some probability
         elif np.random.random()<=prob:
-            filteredPoints.append([x,y,z,"background"])
+            filteredPoints.append([x,y,z,imgData[x,y,z],gradx[x,y,z],grady[x,y,z],
+            gradz[x,y,z],mag[x,y,z],"background"])
 
     
     return np.array(filteredPoints)
-
-
-
-
-
-
-
-
-
-
