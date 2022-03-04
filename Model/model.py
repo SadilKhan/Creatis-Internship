@@ -93,7 +93,7 @@ class transformer(nn.Module):
     def forward(self, xyz, feature):
         bs = xyz.shape[0]
 
-        fps_idx = fps.fps(xyz.contiguous(), self.n_samples).long()  # [B, S]
+        fps_idx = fps(xyz.contiguous(), self.n_samples).long()  # [B, S]
         new_xyz = index_points(xyz, fps_idx)  # [B, S, 3]
         new_feature = index_points(feature, fps_idx).transpose(2, 1).contiguous()  # [B, C, S]
 
@@ -134,8 +134,8 @@ class Model(nn.Module):
         self.use_norm = args.use_norm
 
         # transformer layer
-        self.tf1 = trans_block(3, 128, n_samples=512, K=args.num_K[0], dim_k=args.dim_k, heads=args.head, ch_raise=64)
-        self.tf2 = trans_block(128, 256, n_samples=128, K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=256)
+        self.tf1 = trans_block(5, 128, n_samples=1024, K=args.num_K[0], dim_k=args.dim_k, heads=args.head, ch_raise=64)
+        self.tf2 = trans_block(128, 256, n_samples=512, K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=256)
 
         # multi-graph attention
         self.attn = MGR(256, 256, dim_k=args.dim_k, heads=args.head)
