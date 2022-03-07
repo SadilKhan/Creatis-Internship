@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+import os
 import itk
+from tqdm import tqdm
 import argparse
 
 
@@ -20,8 +21,8 @@ def canny(inputImage,outputImage,variance,lowerT,upperT):
         InputImageType].New()
     cannyFilter.SetInput(reader.GetOutput())
     cannyFilter.SetVariance(variance)
-    #cannyFilter.SetLowerThreshold(lowerT)
-    #cannyFilter.SetUpperThreshold(upperT)
+    cannyFilter.SetLowerThreshold(lowerT)
+    cannyFilter.SetUpperThreshold(upperT)
 
     rescaler = itk.RescaleIntensityImageFilter[
         InputImageType,
@@ -39,16 +40,23 @@ def canny(inputImage,outputImage,variance,lowerT,upperT):
 
 def main():
     parser = argparse.ArgumentParser(description="Positional Arguments for Canny Edge Detection")
-    parser.add_argument('--inputImage',type=str,help="Image Directory",required=True)
-    parser.add_argument('--outputImage',type=str,help="Output Directory",required=True)
+    parser.add_argument('--inputDir',type=str,help="Image Directory",required=True)
+    parser.add_argument('--outputDir',type=str,help="Output Directory",required=True)
     parser.add_argument('--variance',type=list,nargs=3,default=[1,1,1])
     parser.add_argument('--lowerT',type=float,default=20,help="Lower threshold for Edge Detection")
     parser.add_argument('--upperT',type=float,default=50,help="Upper threshold for Edge Detection")
 
     args=parser.parse_args()
 
-    # Edge Detection
-    canny(args.inputImage,args.outputImage,args.variance,args.lowerT,args.upperT)
+    inputImages=os.listdir(args.inputDir)
+    
+    for img in tqdm(inputImages):
+        outImage=args.outputDir+"/"+img.split("/")[-1]
+         # Edge Detection
+        canny(args.inputDir+"/"+img,outImage,args.variance,args.lowerT,args.upperT)
+
+
+   
 
 
 if __name__ == "__main__":
