@@ -40,5 +40,5 @@ python3 pointcloud.py --edgeDir {Directory for Edges} --segDir {Segmentation Mas
 
 ### 3. Visualize
 ```
-python3 visualize.py --csvPath {Path for point cloud CSV}
+python3 visualize.py --csvPath {Path for point cloud CSV} --label {all,no_background,liver,spleen,urinary bladder,gallbladder,right kidney,left kdiney,pancreas}
 ```
