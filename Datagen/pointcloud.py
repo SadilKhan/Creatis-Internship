@@ -6,52 +6,59 @@ import pandas as pd
 import argparse
 from tqdm import tqdm
 from calGradient import gradient
+import time
 
 
 class PointCloudGen():
     """ Class for sampling point clouds from voxel data """
 
-    def __init__(self,imageDir,segDir,outputDir):
+    def __init__(self,edgePath,segDir,outputDir):
         """
-
-        @input imageDir: string like. The path for specific image
+        @input edgePath: string like. The path for specific edge detected image
         @input segDir: string like. The directory for Segmentations
-
+        @input outputDir: string like. The output Directory for csv file
         """
-        self.imageDir=imageDir
+
+        self.edgePath=edgePath
         self.segDir=segDir
         self.outputDir=outputDir
 
-        self.gradx,self.grady,self.gradz,self.mag=gradient(self.imageDir)
-
-        self.patNum=self.imageDir.split("/")[-1].split("_")[0]
+        self.patNum=self.edgePath.split("/")[-1].split("_")[0]
 
 
-        # Initialize and load necessary variables
+        start=time.time()
+        #Initialize Variable
         self.initialize()
-        # Generate Point cloud for every organ
+
+        # Generate point clouds
         self.generate_point_cloud()
 
         # Save the point clouds in csv file
         self.save()
 
-
+        end=time.time()
+        print(f"TOTAL TIME TAKEN: {(end-start)//60} minutes {(end-start)%60} secs")
+    
     def initialize(self):
-        self.image=transform_to_ras(self.imageDir)
+        self.image=transform_to_ras(self.edgePath)
         self.imageData=self.image.get_fdata()
         self.affineMat=self.image.affine
         self.rotMat=self.affineMat[:3,:3]
         self.transMat=self.affineMat[:3,3]
 
-        self.organPC=pd.DataFrame({"x":[],"y":[],"z":[],"value":[],"magnitude":[],"label":[]})
+        
         self.segMask=dict()
-
     def generate_point_cloud(self):
         self.allSegName=find_segmentation_mask(self.segDir,self.patNum)
         orgToSeg=dict()
 
-        # Get point clouds for every organs and store it in Dataframe
-        for organ in ORGAN_CHOICE.keys():
+        X,Y,Z=(self.imageData>0).nonzero()
+
+        self.organPC=pd.DataFrame({"x":X,"y":Y,"z":Z,"label":[0]*len(X)})
+        self.organPC['label']=self.organPC['label'].fillna("Background")
+
+        # Get point cloud labels for every organs and store it in Dataframe
+        for organ in tqdm(ORGAN_CHOICE.keys()):
             codeOrgan=f"_{ORGAN_CHOICE[organ]}_"
             # Find segmentation mask for organ with patientID self.patNum
             for name in self.allSegName:
@@ -59,18 +66,20 @@ class PointCloudGen():
                     break
             segMask=transform_to_ras(self.segDir+"/"+name)
             segMaskData=segMask.get_fdata()
+            
+            # Dilate the segmentation mask onces
+            #segMaskData=dilation(segMaskData)
 
-            cube=find_cube(segMaskData)
+            X_seg,Y_seg,Z_seg=(segMaskData>0).nonzero()
 
-            points=sample_points(cube[0],cube[1])
-            filteredPoints=embed_points(points,self.imageData,segMaskData,self.mag,0.15,organ)
+            organDF=pd.DataFrame({"x":X_seg,"y":Y_seg,"z":Z_seg,
+            "label":[ORGAN_TO_LABEL[organ]]*len(X_seg)})
+            self.organPC=  pd.merge(self.organPC,organDF,how="left",on=["x","y","z"])
+            self.organPC['label_y']=self.organPC['label_y'].fillna(0)
 
-            # Transform the points to scanner-subject space
-            filteredPoints[:,:3]=filteredPoints[:,:3].astype(np.float32)@self.rotMat.T+self.transMat
-            self.organPC=pd.concat([self.organPC,pd.DataFrame({"x":filteredPoints[:,0],
-            "y":filteredPoints[:,1],"z":filteredPoints[:,2],"value":filteredPoints[:,3],"magnitude":filteredPoints[:,4],
-            "label":filteredPoints[:,5]})])
-
+            self.organPC['label']=self.organPC["label_x"]+self.organPC["label_y"]
+            del self.organPC["label_x"]
+            del self.organPC["label_y"]
 
     def save(self):
 
@@ -83,17 +92,18 @@ class PointCloudGen():
         self.organPC.to_csv(directory,index=False)
 
 
+
 def main():
 
     parser=argparse.ArgumentParser(description="Arguments for Point Cloud Generation")
 
-    parser.add_argument("--imageDir",help="Image Directory", required=True)
+    parser.add_argument("--edgeDir",help="Edge Directory", required=True)
     parser.add_argument("--segDir",help="Segmentation Directory",required=True)
     parser.add_argument("--outputDir",help="Output Directory",default="default")
 
     args=parser.parse_args()
 
-    IMAGE_PATH=args.imageDir
+    IMAGE_PATH=args.edgeDir
     allImages=os.listdir(IMAGE_PATH)
 
     for imName in tqdm(allImages):
@@ -104,14 +114,3 @@ def main():
 
 if __name__== "__main__":
     main()
-
-
-
-        
-
-        
-
-                    
-
-
-
