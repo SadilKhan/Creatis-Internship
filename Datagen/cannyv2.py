@@ -6,8 +6,8 @@ import argparse
 
 
 
-def canny(imageDir,outputDir,variance,lowerT,upperT):
-    image = sitk.Cast(sitk.ReadImage(imageDir), sitk.sitkFloat32)
+def canny(inputImage,outputDir,variance,lowerT,upperT):
+    image = sitk.Cast(sitk.ReadImage(inputImage), sitk.sitkFloat32)
 
     blurfilter=sitk.SmoothingRecursiveGaussianImageFilter()
     blurfilter.SetSigma(1.4)
