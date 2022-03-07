@@ -8,16 +8,28 @@ tqdm,
 pandas,
 itk,
 pytorch`
+itk may not work in Mac M1, use `simpleITK` instead.
 
 # To generate point cloud from 3d Voxel image
 
 ### 1. Edge Detection
+
+For windows, Linux, Intel Macs
 ``` 
 python3 canny.py --inputDir {Input Image Directory} --outputDir { Output Image Directory for Saving} --variance --lowerT {Lower Threshold (defaut 20)} --upperT {Upper Threshold(default 50)}
 ```
 ```
 # For more Help
 python3 canny.py -h
+```
+
+For Mac M1
+``` 
+python3 cannyv2.py --inputDir {Input Image Directory} --outputDir { Output Image Directory for Saving} --variance --lowerT {Lower Threshold (defaut 20)} --upperT {Upper Threshold(default 50)}
+```
+```
+# For more Help
+python3 cannyv2.py -h
 ```
 
 ### 2. Point Cloud Generation
