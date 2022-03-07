@@ -85,6 +85,9 @@ class PointCloudGen():
             del self.organPC["label_y"]
         self.organPC['label']=self.organPC['label'].fillna("Background")
 
+        # From Voxel Space to Scanner Space
+        self.organPC[['x','y','z']]=self.organPC[['x','y','z']].values@self.rotMat.T+self.transMat
+
     def save(self):
 
         if self.outputDir=="default":
@@ -118,3 +121,10 @@ def main():
 
 if __name__== "__main__":
     main()
+
+
+
+        
+
+        
+
