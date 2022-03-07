@@ -52,6 +52,7 @@ class PointCloudGen():
         self.allSegName=find_segmentation_mask(self.segDir,self.patNum)
         orgToSeg=dict()
 
+        # Get positions for edges
         X,Y,Z=(self.imageData>0).nonzero()
 
         self.organPC=pd.DataFrame({"x":X,"y":Y,"z":Z,"label":[None]*len(X)})
@@ -70,10 +71,13 @@ class PointCloudGen():
             # Dilate the segmentation mask onces
             segMaskData=dilation(segMaskData)
 
+            # Segmentation Mask positions
             X_seg,Y_seg,Z_seg=(segMaskData>0).nonzero()
 
-            organDF=pd.DataFrame({"x":X_seg,"y":Y_seg,"z":Z_seg,
-            "label":[organ]*len(X_seg)})
+            # Create a dataframe for segmentation
+            organDF=pd.DataFrame({"x":X_seg,"y":Y_seg,"z":Z_seg,"label":[organ]*len(X_seg)})
+            
+            # Get the label for the position that is in segmentation mask and an edge
             self.organPC=  pd.merge(self.organPC,organDF,how="left",on=["x","y","z"])
 
             self.organPC['label']=self.organPC["label_x"].combine_first(self.organPC["label_y"])
@@ -114,10 +118,3 @@ def main():
 
 if __name__== "__main__":
     main()
-
-
-
-        
-
-        
-
