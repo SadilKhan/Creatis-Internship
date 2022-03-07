@@ -54,8 +54,8 @@ class PointCloudGen():
 
         X,Y,Z=(self.imageData>0).nonzero()
 
-        self.organPC=pd.DataFrame({"x":X,"y":Y,"z":Z,"label":[0]*len(X)})
-        self.organPC['label']=self.organPC['label'].fillna("Background")
+        self.organPC=pd.DataFrame({"x":X,"y":Y,"z":Z,"label":[None]*len(X)})
+
 
         # Get point cloud labels for every organs and store it in Dataframe
         for organ in tqdm(ORGAN_CHOICE.keys()):
@@ -68,18 +68,18 @@ class PointCloudGen():
             segMaskData=segMask.get_fdata()
             
             # Dilate the segmentation mask onces
-            #segMaskData=dilation(segMaskData)
+            segMaskData=dilation(segMaskData)
 
             X_seg,Y_seg,Z_seg=(segMaskData>0).nonzero()
 
             organDF=pd.DataFrame({"x":X_seg,"y":Y_seg,"z":Z_seg,
-            "label":[ORGAN_TO_LABEL[organ]]*len(X_seg)})
+            "label":[organ]*len(X_seg)})
             self.organPC=  pd.merge(self.organPC,organDF,how="left",on=["x","y","z"])
-            self.organPC['label_y']=self.organPC['label_y'].fillna(0)
 
-            self.organPC['label']=self.organPC["label_x"]+self.organPC["label_y"]
+            self.organPC['label']=self.organPC["label_x"].combine_first(self.organPC["label_y"])
             del self.organPC["label_x"]
             del self.organPC["label_y"]
+        self.organPC['label']=self.organPC['label'].fillna("Background")
 
     def save(self):
 
@@ -114,3 +114,10 @@ def main():
 
 if __name__== "__main__":
     main()
+
+
+
+        
+
+        
+
