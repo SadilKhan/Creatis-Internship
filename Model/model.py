@@ -74,6 +74,7 @@ class transformer(nn.Module):
         self.heads = heads
 
         C_in = C_in * 2 + dim_v
+
         self.mlp = nn.Sequential(
             nn.Conv2d(C_in, ch_raise, 1, bias=False),
             nn.BatchNorm2d(ch_raise),
@@ -110,7 +111,6 @@ class transformer(nn.Module):
         feature = torch.cat([grouped_points_norm,
                              new_feature.unsqueeze(-1).repeat(1, 1, 1, self.K),
                              pos_encoder], dim=1)  # [B, 2C_in + d, S, K]
-
         feature_q = self.mlp(feature).max(-1)[0]  # [B, C, S]
         query = F.relu(self.bn_query(self.mlp_q(feature_q)))  # [B, head * d, S]
         query = rearrange(query, 'b (h d) n -> b h d n', b=bs, h=self.heads, d=self.d)  # [B, head, d, S]
@@ -134,26 +134,28 @@ class Model(nn.Module):
         self.use_norm = args.use_norm
 
         # transformer layer
-        self.tf1 = trans_block(5, 128, n_samples=1024, K=args.num_K[0], dim_k=args.dim_k, heads=args.head, ch_raise=64)
-        self.tf2 = trans_block(128, 256, n_samples=512, K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=256)
+        self.tf1 = trans_block(3, 64, n_samples=args.num_points, K=args.num_K[0], dim_k=args.dim_k, heads=args.head, ch_raise=64)
+        self.tf2 = trans_block(64, 64, n_samples=args.num_points, K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=64)
+        self.tf3=trans_block(64,128,n_samples=args.num_points,K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=128)
+        self.tf4=trans_block(1024,1024,n_samples=args.num_points,K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=256)
 
         # multi-graph attention
-        self.attn = MGR(256, 256, dim_k=args.dim_k, heads=args.head)
+        self.attn = MGR(1024, 1024, dim_k=args.dim_k, heads=args.head)
 
         self.conv_raise = nn.Sequential(
             nn.Conv1d(256, 512, kernel_size=1, bias=False),
             nn.BatchNorm1d(512),
             nn.ReLU(True),
-            nn.Conv1d(512, args.emb_dims, kernel_size=1, bias=False),
-            nn.BatchNorm1d(args.emb_dims),
+            nn.Conv1d(512, 2048, kernel_size=1, bias=False),
+            nn.BatchNorm1d(2048),
             nn.ReLU(True))
 
-        self.cls = nn.Sequential(
-            nn.Linear(args.emb_dims, 512, bias=False),
+        self.seg = nn.Sequential(
+            nn.Conv1d(1280, 512, kernel_size=1, bias=False),
             nn.BatchNorm1d(512),
             nn.ReLU(True),
-            nn.Dropout(p=args.dropout),
-            nn.Linear(512, output_channels))
+            nn.Conv1d(512, output_channels, kernel_size=1),
+            nn.Softmax())
 
     def forward(self, x):
         # input x: [B, N, 3+3]
@@ -164,12 +166,35 @@ class Model(nn.Module):
             assert x.size()[-1] == 6
             feature = x[..., 3:]
 
+        # First Transformer Block 
         xyz1, feature1 = self.tf1(xyz, feature)
         feature1 = feature1.transpose(2, 1)
-        _, feature2 = self.tf2(xyz1, feature1)
 
-        feature3 = self.attn(feature2)
-        out = self.conv_raise(feature3)
-        out = self.cls(out.max(-1)[0])
+        # Second transformer Block
+        xyz2, feature2 = self.tf2(xyz1, feature1)
+        feature2=feature2.transpose(2,1)
+
+        # Third Transformer block
+        xyz3, feature3 = self.tf3(xyz2, feature2)
+        feature3=feature3.transpose(2,1)
+        
+        # Concatenation
+        feature4=torch.concat((feature1,feature2,feature3),dim=2)
+
+        # MLP
+        feature5=self.conv_raise(feature4.transpose(2,1))
+
+        # Fourth Block
+        xyz6,feature6=self.tf4(xyz3,feature5)
+        feature7=self.attn(feature6) # (B, emb_dims,num_samples)
+        feature7=feature7.transpose(2,1) # (B,num_samples,emb_dims)
+
+        # Concatenation
+        feature8=torch.concat((feature1,feature2,feature3,feature7),dim=2)
+
+        # MLP
+        feature9=self.seg(feature8.transpose(2,1))
+        out=feature9.transpose(2,1)
+        out=out.argmax(dim=2)
 
         return out
