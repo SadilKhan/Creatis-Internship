@@ -1,200 +1,162 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from einops import rearrange
-from torch import einsum
-from model_utils import *
 import sys
-import os
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIR)
-
-class MGR(nn.Module):
-    def __init__(self, C_in, C_out, dim_k=32, heads=8):
-        super().__init__()
-        self.heads = heads
-        self.k = dim_k
-
-        assert (C_out % heads) == 0, 'values dimension must be integer'
-        dim_v = C_out // heads
-
-        self.conv_q = nn.Conv1d(C_in, dim_k * heads, 1, bias=False)
-        self.conv_k = nn.Conv1d(C_in, dim_k, 1, bias=False)
-        self.conv_v = nn.Conv1d(C_in, dim_v, 1, bias=False)
-
-        self.norm_q = nn.BatchNorm1d(dim_k * heads)
-        self.norm_v = nn.BatchNorm1d(dim_v)
-
-        self.blocker = nn.BatchNorm1d(C_out)
-        self.skip = nn.Conv1d(C_out, C_out, 1)
-
-        # multi-dimensional adjacency matrix
-        self.A = nn.Parameter(torch.randn(dim_v, dim_v, dim_k), requires_grad=True)
-
-    def forward(self, x):
-        '''
-        :param x: [B, C_in, N]
-        :return: out: [B, C_out, N]
-        '''
-        query = self.conv_q(x)  # [B, head * C_k, N]
-        key = self.conv_k(x)  # [B, C_k, N]
-        value = self.conv_v(x)  # [B, C_v, N]
-
-        # normalization
-        query = self.norm_q(query)
-        value = self.norm_v(value)
-        key = key.softmax(dim=-1)
-
-        query = rearrange(query, 'b (h k) n -> b h k n', h=self.heads)  # [B, head, C_k, N]
-        k_v_attn = einsum('b k n, b v n -> b k v', key, value)  # [B, C_k, C_v]
-        Yc = einsum('b h k n, b k v -> b n h v', query, k_v_attn)  # [B, N, head, C_v]
-        G = einsum('b v n, w v k -> b n k w', value, self.A).contiguous()  # A*x: [B, N, C_k, C_v]
-        value = rearrange(value, 'b v n -> b n (1) v').contiguous()
-        G = F.relu(G + value)  # [B, N, C_k, C_v]
-        Yp = einsum('b h k n, b n k v -> b n h v', query, G)  # [B, N, head, C_v]
-
-        out = Yc + Yp
-        out = rearrange(out, 'b n h v -> b n (h v)')
-        out = rearrange(out, 'b n c -> b c n')
-        out = self.blocker(self.skip(out))
-
-        return F.relu(out + x)
+import numpy as np
+from sklearn.metrics import confusion_matrix
 
 
-class transformer(nn.Module):
-    def __init__(self, C_in, C_out, n_samples=None, K=20, dim_k=32, heads=8, ch_raise=64):
-        super().__init__()
-        self.d = dim_k
-        assert (C_out % heads) == 0, 'values dimension must be integer'
-        dim_v = C_out // heads
+def square_distance(src, dst):
+    """
+    Calculate Euclid distance between each two points.
 
-        self.n_samples = n_samples
-        self.K = K
-        self.heads = heads
+    src^T * dst = xn * xm + yn * ym + zn * zm；
+    sum(src^2, dim=-1) = xn*xn + yn*yn + zn*zn;
+    sum(dst^2, dim=-1) = xm*xm + ym*ym + zm*zm;
+    dist = (xn - xm)^2 + (yn - ym)^2 + (zn - zm)^2
+         = sum(src**2,dim=-1)+sum(dst**2,dim=-1)-2*src^T*dst
 
-        C_in = C_in * 2 + dim_v
-
-        self.mlp = nn.Sequential(
-            nn.Conv2d(C_in, ch_raise, 1, bias=False),
-            nn.BatchNorm2d(ch_raise),
-            nn.ReLU(True),
-            nn.Conv2d(ch_raise, ch_raise, 1, bias=False),
-            nn.BatchNorm2d(ch_raise),
-            nn.ReLU(True))
-
-        self.mlp_v = nn.Conv1d(C_in, dim_v, 1, bias=False)
-        self.mlp_k = nn.Conv1d(C_in, dim_k, 1, bias=False)
-        self.mlp_q = nn.Conv1d(ch_raise, heads * dim_k, 1, bias=False)
-        self.mlp_h = nn.Conv2d(3, dim_v, 1, bias=False)
-
-        self.bn_value = nn.BatchNorm1d(dim_v)
-        self.bn_query = nn.BatchNorm1d(heads * dim_k)
-
-    def forward(self, xyz, feature):
-        bs = xyz.shape[0]
-
-        fps_idx = fps(xyz.contiguous(), self.n_samples).long()  # [B, S]
-        new_xyz = index_points(xyz, fps_idx)  # [B, S, 3]
-        new_feature = index_points(feature, fps_idx).transpose(2, 1).contiguous()  # [B, C, S]
-
-        knn_idx = knn_point(self.K, xyz, new_xyz)  # [B, S, K]
-        neighbor_xyz = index_points(xyz, knn_idx)  # [B, S, K, 3]
-        grouped_features = index_points(feature, knn_idx)  # [B, S, K, C]
-        grouped_features = grouped_features.permute(0, 3, 1, 2).contiguous()  # [B, C, S, K]
-        grouped_points_norm = grouped_features - new_feature.unsqueeze(-1).contiguous()  # [B, C, S, K]
-        # relative spatial coordinates
-        relative_pos = neighbor_xyz - new_xyz.unsqueeze(-2).repeat(1, 1, self.K, 1)  # [B, S, K, 3]
-        relative_pos = relative_pos.permute(0, 3, 1, 2).contiguous()  # [B, 3, S, K]
-
-        pos_encoder = self.mlp_h(relative_pos)
-        feature = torch.cat([grouped_points_norm,
-                             new_feature.unsqueeze(-1).repeat(1, 1, 1, self.K),
-                             pos_encoder], dim=1)  # [B, 2C_in + d, S, K]
-        feature_q = self.mlp(feature).max(-1)[0]  # [B, C, S]
-        query = F.relu(self.bn_query(self.mlp_q(feature_q)))  # [B, head * d, S]
-        query = rearrange(query, 'b (h d) n -> b h d n', b=bs, h=self.heads, d=self.d)  # [B, head, d, S]
-
-        feature = feature.permute(0, 2, 1, 3).contiguous()  # [B, S, 2C, K]
-        feature = feature.view(bs * self.n_samples, -1, self.K)  # [B*S, 2C, K]
-        value = self.bn_value(self.mlp_v(feature))  # [B*S, v, K]
-        value = value.view(bs, self.n_samples, -1, self.K)  # [B, S, v, K]
-        key = self.mlp_k(feature).softmax(dim=-1)  # [B*S, d, K]
-        key = key.view(bs, self.n_samples, -1, self.K)  # [B, S, d, K]
-        k_v_attn = einsum('b n d k, b n v k -> b d v n', key, value)  # [bs, d, v, N]
-        out = einsum('b h d n, b d v n -> b h v n', query, k_v_attn.contiguous())  # [B, S, head, v]
-        out = rearrange(out.contiguous(), 'b h v n -> b (h v) n')  # [B, C_out, S]
-
-        return new_xyz, out
+    Input:
+        src: source points, [B, N, C]
+        dst: target points, [B, M, C]
+    Output:
+        dist: per-point square distance, [B, N, M]
+    """
+    B, N, _ = src.shape
+    _, M, _ = dst.shape
+    dist = -2 * torch.matmul(src, dst.permute(0, 2, 1))
+    dist += torch.sum(src ** 2, -1).view(B, N, 1)
+    dist += torch.sum(dst ** 2, -1).view(B, 1, M)
+    return dist
 
 
-class Model(nn.Module):
-    def __init__(self, args, trans_block, output_channels=2):
-        super().__init__()
-        self.use_norm = args.use_norm
+def knn_point(K, xyz, new_xyz):
+    """
+    Input:
+        nsample: max sample number in local region
+        xyz: all points, [B, N, C]
+        new_xyz: query points, [B, S, C]
+    Return:
+        group_idx: grouped points index, [B, S, K]
+    """
+    sqrdists = square_distance(new_xyz, xyz)
+    _, group_idx = torch.topk(sqrdists, K, dim=-1, largest=False, sorted=False)
+    return group_idx
 
-        # transformer layer
-        self.tf1 = trans_block(3, 64, n_samples=args.num_points, K=args.num_K[0], dim_k=args.dim_k, heads=args.head, ch_raise=64)
-        self.tf2 = trans_block(64, 64, n_samples=args.num_points, K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=64)
-        self.tf3=trans_block(64,128,n_samples=args.num_points,K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=128)
-        self.tf4=trans_block(1024,1024,n_samples=args.num_points,K=args.num_K[1], dim_k=args.dim_k, heads=args.head, ch_raise=256)
 
-        # multi-graph attention
-        self.attn = MGR(1024, 1024, dim_k=args.dim_k, heads=args.head)
+def index_points(points, idx):
+    """
 
-        self.conv_raise = nn.Sequential(
-            nn.Conv1d(256, 512, kernel_size=1, bias=False),
-            nn.BatchNorm1d(512),
-            nn.ReLU(True),
-            nn.Conv1d(512, 2048, kernel_size=1, bias=False),
-            nn.BatchNorm1d(2048),
-            nn.ReLU(True))
+    Input:
+        points: input points data, [B, N, C]
+        idx: sample index data, [B, S]
+    Return:
+        new_points:, indexed points data, [B, S, C]
+    """
+    device = points.device
+    B = points.shape[0]
+    view_shape = list(idx.shape)
+    view_shape[1:] = [1] * (len(view_shape) - 1)
+    repeat_shape = list(idx.shape)
+    repeat_shape[0] = 1
+    batch_indices = torch.arange(B, dtype=torch.long).to(device).view(view_shape).repeat(repeat_shape)
+    new_points = points[batch_indices, idx, :]
+    return new_points
 
-        self.seg = nn.Sequential(
-            nn.Conv1d(1280, 512, kernel_size=1, bias=False),
-            nn.BatchNorm1d(512),
-            nn.ReLU(True),
-            nn.Conv1d(512, output_channels, kernel_size=1),
-            nn.Softmax())
+def get_dists(points1, points2):
+    '''
+    Calculate dists between two group points
+    :param cur_point: shape=(B, M, C)
+    :param points: shape=(B, N, C)
+    :return:
+    '''
+    B, M, C = points1.shape
+    _, N, _ = points2.shape
+    dists = torch.sum(torch.pow(points1, 2), dim=-1).view(B, M, 1) + \
+            torch.sum(torch.pow(points2, 2), dim=-1).view(B, 1, N)
+    dists -= 2 * torch.matmul(points1, points2.permute(0, 2, 1))
+    dists = torch.where(dists < 0, torch.ones_like(dists) * 1e-7, dists) # Very Important for dist = 0.
+    return torch.sqrt(dists).float()
 
-    def forward(self, x):
-        # input x: [B, N, 3+3]
-        xyz = x[..., :3]
-        if not self.use_norm:
-            feature = xyz
-        else:
-            assert x.size()[-1] == 6
-            feature = x[..., 3:]
+def fps(xyz, M):
+    '''
+    Sample M points from points according to farthest point sampling (FPS) algorithm.
+    :param xyz: shape=(B, N, 3)
+    :return: inds: shape=(B, M)
+    '''
+    device = xyz.device
+    B, N, C = xyz.shape
+    centroids = torch.zeros(size=(B, M), dtype=torch.long).to(device)
+    dists = torch.ones(B, N).to(device) * 1e5
+    inds = torch.randint(0, N, size=(B, ), dtype=torch.long).to(device)
+    batchlists = torch.arange(0, B, dtype=torch.long).to(device)
+    #print(dists.shape)
+    for i in range(M):
+        centroids[:, i] = inds
+        cur_point = xyz[batchlists, inds, :] # (B, 3)
+        cur_dist = torch.squeeze(get_dists(torch.unsqueeze(cur_point, 1), xyz))
+        #cur_dist=torch.unsqueeze(cur_dist,dim=0)
+        dists[cur_dist < dists] = cur_dist[cur_dist < dists]
+        inds = torch.max(dists, dim=1)[1]
+    print(centroids.shape)
 
-        # First Transformer Block 
-        xyz1, feature1 = self.tf1(xyz, feature)
-        feature1 = feature1.transpose(2, 1)
 
-        # Second transformer Block
-        xyz2, feature2 = self.tf2(xyz1, feature1)
-        feature2=feature2.transpose(2,1)
+def cal_loss(pred, label, smoothing=True):
+    """
+    Calculate cross entropy loss, apply label smoothing if needed.
+    """
+    label = label.contiguous().view(-1)  # [Batch_size]
+    predLabel=pred.detach().cpu()
 
-        # Third Transformer block
-        xyz3, feature3 = self.tf3(xyz2, feature2)
-        feature3=feature3.transpose(2,1)
-        
-        # Concatenation
-        feature4=torch.concat((feature1,feature2,feature3),dim=2)
+    iou=compute_iou(predLabel,label.cpu())
 
-        # MLP
-        feature5=self.conv_raise(feature4.transpose(2,1))
+    if smoothing:
+        eps = 0.2
+        n_class = pred.size(1)
 
-        # Fourth Block
-        xyz6,feature6=self.tf4(xyz3,feature5)
-        feature7=self.attn(feature6) # (B, emb_dims,num_samples)
-        feature7=feature7.transpose(2,1) # (B,num_samples,emb_dims)
+        one_hot = torch.zeros_like(pred).scatter(1, label.view(-1, 1), 1)
+        one_hot = one_hot * (1 - eps) + (1 - one_hot) * eps / (n_class - 1)
+        log_prb = F.log_softmax(pred, dim=1)
 
-        # Concatenation
-        feature8=torch.concat((feature1,feature2,feature3,feature7),dim=2)
+        loss = -(one_hot * log_prb).sum(dim=1).mean()
+    else:
+        loss = F.cross_entropy(pred, label, reduction='mean')
 
-        # MLP
-        feature9=self.seg(feature8.transpose(2,1))
-        out=feature9.transpose(2,1)
-        out=out.argmax(dim=2)
+    return loss,iou
 
-        return out
+
+class IOStream:
+    def __init__(self, path):
+        self.f = open(path, 'a')
+
+    def cprint(self, text):
+        print(text)
+        self.f.write(text + '\n')
+        self.f.flush()
+
+    def close(self):
+        self.f.close()
+
+
+def compute_iou(y_pred, y_true):
+    # ytrue, ypred is a flatten vector
+    y_pred = y_pred.flatten()
+    y_true = y_true.flatten()
+    current = confusion_matrix(y_true, y_pred, labels=[0, 1])
+    # compute mean iou
+    intersection = np.diag(current)[1]
+    ground_truth_set = current.sum(axis=1)[1]
+    predicted_set = current.sum(axis=0)[1]
+    union = ground_truth_set + predicted_set - intersection
+    if union>0:
+        IoU = intersection / union.astype(np.float32)
+    else:
+        IoU=0
+
+    return IoU
+
+
+
+
+
+    
