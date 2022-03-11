@@ -8,6 +8,7 @@ tqdm,
 pandas,
 itk,
 pytorch`
+
 itk may not work in Mac M1, use `simpleITK` instead.
 
 # To generate point cloud from 3d Voxel image
