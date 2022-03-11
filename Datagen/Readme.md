@@ -17,7 +17,12 @@ pytorch`
 
 For windows, Linux, Intel Macs
 ``` 
-python3 canny.py --inputDir {Input Image Directory} --outputDir { Output Image Directory for Saving} --variance --lowerT {Lower Threshold (defaut 20)} --upperT {Upper Threshold(default 50)}
+python3 canny.py 
+--inputDir {Input Image Directory} 
+--outputDir { Output Image Directory for Saving} 
+--variance 
+--lowerT {Lower Threshold (defaut 20)} 
+--upperT {Upper Threshold(default 50)}
 ```
 ```
 # For more Help
@@ -26,7 +31,12 @@ python3 canny.py -h
 
 For Mac M1
 ``` 
-python3 cannyv2.py --inputDir {Input Image Directory} --outputDir { Output Image Directory for Saving} --variance --lowerT {Lower Threshold (defaut 20)} --upperT {Upper Threshold(default 50)}
+python3 cannyv2.py 
+--inputDir {Input Image Directory} 
+--outputDir { Output Image Directory for Saving} 
+--variance 
+--lowerT {Lower Threshold (defaut 20)} 
+--upperT {Upper Threshold(default 50)}
 ```
 ```
 # For more Help
@@ -36,10 +46,16 @@ python3 cannyv2.py -h
 ### 2. Point Cloud Generation
 
 ```
-python3 pointcloud.py --edgeDir {Directory for Edges} --segDir {Segmentation Mask Directory} --outputDir {Directory to save Point Cloud CSV}
+python3 pointcloud.py 
+--edgeDir {Directory for Edges} 
+--segDir {Segmentation Mask Directory} 
+--outputDir {Directory to save Point Cloud CSV}
 ```
 
 ### 3. Visualize
 ```
-python3 visualize.py --csvPath {Path for point cloud CSV} --label {all,no_background,liver,spleen,urinary bladder,gallbladder,right kidney,left kdiney,pancreas}
+python3 visualize.py 
+--csvPath {Path for point cloud CSV} 
+--label {all,no_background,liver,spleen,urinary bladder,gallbladder,right kidney,left kdiney,pancreas}
+--downsample {Voxel Downsampling (default 0)}
 ```
