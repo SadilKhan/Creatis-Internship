@@ -6,12 +6,12 @@ import argparse
 from globalVar import ORGAN_TO_LABEL,ORGAN_TO_RGB
 
 
-def visualize_point_cloud(csvPath,label="all"):
+def visualize_point_cloud(csvPath,label="all",downsample=0):
     """ 3d visualization of point clouds """
 
     pointCloud=pd.read_csv(csvPath)
     if label=="no_background":
-        pointCloud=pointCloud[(pointCloud['label']!="Background")]
+        pointCloud=pointCloud[(pointCloud['label']!="background")]
     elif label!="all":
         pointCloud=pointCloud[pointCloud['label']==label]
     unique_label=pointCloud["label"].unique()
@@ -30,9 +30,14 @@ def visualize_point_cloud(csvPath,label="all"):
     pcd.points=o3d.utility.Vector3dVector(pointCloud[["x","y","z"]].values)
     pcd.colors=o3d.utility.Vector3dVector(colors)
 
+    # Voxel Downsampling
+    if downsample>0:
+        pcd=pcd.voxel_down_sample(voxel_size=downsample)
+
+    print(type(pcd.points))
+
     o3d.visualization.draw_geometries_with_animation_callback([pcd],
                                                               rotate_view)
-
 def rotate_view(vis):
     ctr = vis.get_view_control()
     ctr.rotate(1.0, 0.0)
@@ -42,11 +47,12 @@ def main():
     parser=argparse.ArgumentParser()
 
     parser.add_argument("--csvPath",help="CSV Path for point cloud",required=True)
-    parser.add_argument("--label",help="which label to show",default="all")
+    parser.add_argument("--label",help="which label to show",default="no_background")
+    parser.add_argument("--downsample",help="Voxel Downsampling",type=float,default=0)
 
     args=parser.parse_args()
 
-    visualize_point_cloud(args.csvPath,args.label)
+    visualize_point_cloud(args.csvPath,args.label,args.downsample)
 
 
 
