@@ -15,6 +15,7 @@ def visualize_point_cloud(csvPath,label="all",downsample=0):
     elif label!="all":
         pointCloud=pointCloud[pointCloud['label']==label]
     unique_label=pointCloud["label"].unique()
+    print(pointCloud['label'].value_counts())
     """labelDict=dict()
     colorDict=dict()
     # Make colors for every unique label
@@ -32,9 +33,11 @@ def visualize_point_cloud(csvPath,label="all",downsample=0):
 
     # Voxel Downsampling
     if downsample>0:
+        print("BEFORE DOWNSAMPLING",len(pcd.points))
         pcd=pcd.voxel_down_sample(voxel_size=downsample)
+        print("AFTER DOWNSAMPLING",len(pcd.points))
 
-    print(type(pcd.points))
+    
 
     o3d.visualization.draw_geometries_with_animation_callback([pcd],
                                                               rotate_view)
