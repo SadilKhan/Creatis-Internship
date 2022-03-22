@@ -1,7 +1,7 @@
 import numpy as np
 import nibabel as nib
 from torch import threshold
-from utils import transform_to_ras
+from utils import ctorg_find_seg_mask, transform_to_ras
 import argparse
 import os
 from tqdm import tqdm
@@ -39,11 +39,10 @@ def main():
     args=parser.parse_args()
 
     segDir=args.segDir
-    segMasks=os.listdir(segDir)
+    segMasks=ctorg_find_seg_mask(segDir)
 
     for msk in tqdm(segMasks):
-        if "labels" in msk:
-            corSegLabel(segDir+"/"+msk,args.threshold)
+        corSegLabel(segDir+"/"+msk,args.threshold)
 
 
 if __name__ == "__main__":
