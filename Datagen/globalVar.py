@@ -23,8 +23,7 @@ CTORG_LABEL_TO_ORGAN={0: "background",
 6: "brain"}
 
 # After distinguishing the two kidneys
-CTORG_ORGAN_CHOICE={"background":0,
-"liver":1,
+CTORG_ORGAN_CHOICE={"liver":1,
 "bladder":2,
 "lungs":3,
 "left_kidney":4,
