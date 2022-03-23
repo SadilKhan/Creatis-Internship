@@ -98,11 +98,7 @@ def translate_pointcloud(pointcloud):
     return translated_pointcloud
 
 
-def dilation(image,multiplier):
-
-    # 3d mask
-    mask=ndimage.generate_binary_structure(rank=3,connectivity=2)
-    mask*=multiplier
+def dilation(image):
 
     # Dialte the image
     dilated=ndimage.binary_dilation(image,iterations=1)
@@ -156,12 +152,12 @@ def fps(points, n_samples):
 
     return sample_inds
 
-def ctorg_find_seg_mask(dir,imgNum=None):
+def ctorg_find_seg_mask(dir,imgNum=-1):
     """ Finds the segmentation masks for CT ORG datasets"""
     allFile=os.listdir(dir)
     segMasks=[]
 
-    if not imgNum:
+    if imgNum<0:
         for file in allFile:
             if "labels" in file:
                 segMasks.append(file)
@@ -169,4 +165,17 @@ def ctorg_find_seg_mask(dir,imgNum=None):
     else:
         file=f"labels-{imgNum}.nii.gz"
         return file
+def ctorg_find_volume_mask(dir,imgNum=-1):
+    """ Finds the volumes masks for CT ORG datasets"""
 
+    allFile=os.listdir(dir)
+    volMasks=[]
+
+    if imgNum<0:
+        for file in allFile:
+            if "volume" in file:
+                volMasks.append(file)
+        return volMasks
+    else:
+        file=f"volume-{imgNum}.nii.gz"
+        return file
