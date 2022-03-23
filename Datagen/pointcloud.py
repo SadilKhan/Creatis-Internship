@@ -26,9 +26,9 @@ class PointCloudGen():
         self.outputDir = outputDir
 
         if self.datatype == "visceral":
-            self.Num = self.edgePath.split("/")[-1].split("_")[0]
+            self.Num = int(self.edgePath.split("/")[-1].split("_")[0])
         else:
-            self.Num = self.edgePath.split("/")[-1].split("_")[0].split("-")[-1]
+            self.Num = int(self.edgePath.split("/")[-1].split("_")[0].split("-")[-1])
 
         start = time.time()
         # Initialize Variable
@@ -97,6 +97,8 @@ class PointCloudGen():
             del self.organPC["label_x"]
             del self.organPC["label_y"]
         self.organPC['label'] = self.organPC['label'].fillna("background")
+        # Replace the left lung and right lung into single label lungs
+        self.organPC['label']=self.organPC['label'].replace({"left_lung":"lungs","right_lung":"lungs"})
 
         # From Voxel Space to Scanner Space
         self.organPC[['x', 'y', 'z']] = self.organPC[[
@@ -115,15 +117,14 @@ class PointCloudGen():
 
         self.organPC = pd.DataFrame(
             {"x": X, "y": Y, "z": Z, "label": [None]*len(X)})
-        segMaskDataTemp=segMaskData
         # Get point cloud labels for every organs and store it in Dataframe
         for organ in CTORG_ORGAN_CHOICE.keys():
             labelOrgan = CTORG_ORGAN_CHOICE[organ]
-            """if organ!="background":
-                segMaskDataTemp = dilation(segMaskData,labelOrgan)"""
+            segMaskDataTemp=(segMaskData==labelOrgan)*1
+            segMaskDataTemp=dilation(segMaskDataTemp)
 
             # Segmentation Mask positions
-            X_seg, Y_seg, Z_seg = (segMaskDataTemp == labelOrgan).nonzero()
+            X_seg, Y_seg, Z_seg = (segMaskDataTemp == 1).nonzero()
             # Create a dataframe for segmentation
             organDF = pd.DataFrame(
                 {"x": X_seg, "y": Y_seg, "z": Z_seg, "label": [organ]*len(X_seg)})
