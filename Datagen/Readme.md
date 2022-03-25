@@ -13,6 +13,14 @@ pytorch`
 
 # To generate point cloud from 3d Voxel image
 
+### (Optional) for CtOrg
+The Ctorg dataset has same labels for right and left kidney, if you want to label them separately, then the run the following code
+
+```
+python3 ctOrgSeg.py 
+--segDir (The segmentation Directory)
+```
+
 ### 1. Edge Detection
 
 For windows, Linux, Intel Macs
