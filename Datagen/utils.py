@@ -43,10 +43,10 @@ def transform_to_ras(imageName):
         #print("IMAGE ALREADY IN RAS+ FORMAT")
         return image
 
-def find_cube(segImage):
+def find_cube(segImage,label):
     """ Finds Bounding Cube of an segmentation image """
 
-    x,y,z=np.where(segImage>0)
+    x,y,z=np.where(segImage==label)
     A1=[np.min(x),np.min(y),np.min(z)]
     A2=[np.max(x),np.max(y),np.max(z)]
 
