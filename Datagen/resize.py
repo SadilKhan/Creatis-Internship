@@ -41,8 +41,8 @@ class ResizeImage:
             #print(path)
             seg=nib.load(path)
             segData=seg.get_fdata()
-            rescaledSegData=zoom(imageData, self.resizeRate)
-            nib.save(nib.Nifti1Image(rescaledSegData,image.affine),path)
+            rescaledSegData=zoom(segData, self.resizeRate)
+            nib.save(nib.Nifti1Image(rescaledSegData,seg.affine),path)
 
 
 def main():
