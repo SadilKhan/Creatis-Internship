@@ -179,3 +179,48 @@ def ctorg_find_volume_mask(dir,imgNum=-1):
     else:
         file=f"volume-{imgNum}.nii.gz"
         return file
+
+  
+def getInfo(data):
+    n=len(data)
+    trainLoss=[]
+    testLoss=[]
+    trAcc,tstAcc=[],[]
+    trIou,tstIou=[],[]
+    trainAcc,trainIou,testAcc,testIou=dict(),dict(),dict(),dict()
+    for i in range(1,n):
+        if "Training loss:" in data[i]:
+            trainLoss.append(float(data[i].split(" ")[2].split("\t")[0]))
+            testLoss.append(float(data[i].split(" ")[-1].split("\t")[0]))
+        if ("Training" in data[i]) and ("Accuracy" in data[i-1]):
+            for j,d in enumerate(data[i].split("|")[1:-1]):
+                try:
+                    trainAcc[LABEL_TO_ORGAN[j]].append(float(d.split("/n")[0]))
+                except:
+                    trainAcc[LABEL_TO_ORGAN[j]]=[float(d.split("/n")[0])]
+            trAcc.append(float(float(data[i].split("|")[-1].split("/n")[0])))
+
+        if ("Validation" in data[i]) and ("Accuracy" in data[i-2]):
+            for j,d in enumerate(data[i].split("|")[1:-1]):
+                try:
+                    testAcc[LABEL_TO_ORGAN[j]].append(float(d.split("/n")[0]))
+                except:
+                    testAcc[LABEL_TO_ORGAN[j]]=[float(d.split("/n")[0])]
+            tstAcc.append(float(float(data[i].split("|")[-1].split("/n")[0])))
+        
+        if ("Training" in data[i]) and ("IoU" in data[i-1]):
+            for j,d in enumerate(data[i].split("|")[1:-1]):
+                try:
+                    trainIou[LABEL_TO_ORGAN[j]].append(float(d.split("/n")[0]))
+                except:
+                    trainIou[LABEL_TO_ORGAN[j]]=[float(d.split("/n")[0])]
+            trIou.append(float(data[i].split("|")[-1].split("/n")[0]))
+        
+        if ("Validation" in data[i]) and ("IoU" in data[i-2]):
+            for j,d in enumerate(data[i].split("|")[1:-1]):
+                try:
+                    testIou[LABEL_TO_ORGAN[j]].append(float(d.split("/n")[0]))
+                except:
+                    testIou[LABEL_TO_ORGAN[j]]=[float(d.split("/n")[0])]
+            tstIou.append(float(float(data[i].split("|")[-1].split("/n")[0])))
+    return trainLoss,testLoss,trAcc,tstAcc,trIou,tstIou,trainAcc,trainIou,testAcc,testIou
