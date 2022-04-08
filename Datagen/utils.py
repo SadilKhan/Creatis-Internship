@@ -224,3 +224,62 @@ def getInfo(data):
                     testIou[LABEL_TO_ORGAN[j]]=[float(d.split("/n")[0])]
             tstIou.append(float(float(data[i].split("|")[-1].split("/n")[0])))
     return trainLoss,testLoss,trAcc,tstAcc,trIou,tstIou,trainAcc,trainIou,testAcc,testIou
+
+
+
+# Functions for plotting the arrays extracted from .out filesa
+def loss_plot(trainLoss,testLoss,save=False):
+    plt.figure(figsize=(10,10))
+    plt.plot(trainLoss)
+    plt.plot(testLoss)
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss Value")
+    plt.legend(["Train","Test"])
+    plt.title("Cross Entropy Loss(Weighted)")
+    if save:
+        plt.savefig("Loss plot.png")
+    plt.show()
+def iou_plot(trainIou,testIou,save=False):
+    plt.figure(figsize=(10,10))
+    plt.plot(trainIou)
+    plt.plot(testIou)
+    plt.xlabel("Epochs")
+    plt.ylabel("Iou Value")
+    plt.legend(["Train","Test"])
+    plt.title("Iou Plot")
+    if save:
+        plt.savefig("iou plot.png")
+    plt.show()
+def accuracy_plot(trainAcc,testAcc,save=False):
+    plt.figure(figsize=(10,10))
+    plt.plot(trainAcc)
+    plt.plot(testAcc)
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.legend(["Train","Test"])
+    plt.title("Accuracy Plot ")
+    if save:
+        plt.savefig("Accuracy plot.png")
+    plt.show()
+
+def organ_plot(train,type="train",metrics="acc",save=False):
+    plt.figure(figsize=(10,10))
+    plt.plot(train['background'])
+    plt.plot(train['liver'])
+    plt.plot(train['lungs'])
+    plt.plot(train['bladder'])
+    plt.plot(train['left_kidney'])
+    plt.plot(train['right_kidney'])
+    plt.legend(list(train.keys()))
+    plt.xlabel("Epochs")
+    if metrics=="acc":
+        plt.ylabel("Accuracy")
+        plt.title(f"Accuracy of organs during {type}ing")
+    else:
+        plt.ylabel("IoU")
+        plt.title("IoU of organs during training")
+    
+    if save:
+        plt.savefig(f"organ_plot_{type}_{metrics}.png")
+    
+    plt.show()
