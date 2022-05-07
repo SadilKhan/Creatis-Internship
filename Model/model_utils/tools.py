@@ -126,3 +126,33 @@ class DataProcessing:
         # If class is absent, place mIoU in place of 0 IoU to get the actual mean later
         IoU += mask * mIoU
         return IoU
+
+    
+    class FPCrossEntropyLoss(nn.Module):
+    """ Cross Entopy Loss which takes into account the background error"""
+    def __init__(self):
+        super(FPCrossEntropyLoss, self).__init__()
+        pass
+
+    def forward(self,pred,true):
+        """
+        pred: shape (B,C,N)
+        true: shape (B,N)
+        """
+        pred=F.softmax(pred,dim=1)
+        M=pred.size(1)
+        loss=0
+        w: torch.Tensor = 1 / einsum("bch->bh", F.one_hot(true)).type(torch.float32)
+
+        for i in range(M):
+            pos_i=(true==i).nonzero()[:,1]
+            pred_i=pred[:,:,pos_i]
+            pred_label_i=pred_i.argmax(dim=1) # The prediction Label
+            if i==0:
+                weight_i=w[:,pred_label_i[0]]
+            else:
+                weight_i=w[:,i]
+
+            loss+=torch.sum(-1*weight_i*torch.log(pred_i[:,i,:]))
+    
+        return loss/M
