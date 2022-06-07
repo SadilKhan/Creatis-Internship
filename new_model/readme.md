@@ -1,0 +1,1 @@
+The name of the model is 3D Shape Aware Medical Segmentation Net (3DSAMS-NET)
