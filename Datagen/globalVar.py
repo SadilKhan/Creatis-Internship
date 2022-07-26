@@ -1,3 +1,4 @@
+# This file contains the global variables used thoughout the codes
 import numpy as np
 
 
@@ -31,7 +32,7 @@ CTORG_ORGAN_CHOICE={"liver":1,
 
 
 # ! GLOBAL VARIABLES
-ORGAN_TO_LABEL={"background":0,"liver":1,"lungs":1,
+ORGAN_TO_LABEL={"background":0,"liver":1,"lungs":2,
 "bladder":3,"left_kidney":4,"right_kidney":5}
 
 LABEL_TO_ORGAN={0:"background",1:"liver",2:"lungs",
