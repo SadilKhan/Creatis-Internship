@@ -7,7 +7,8 @@ This module deals with Point cloud generation from voxel images using canny dete
 tqdm,
 pandas,
 itk,
-pytorch`
+pytorch
+pynanoflann`
 
 `itk` may not work in Mac M1, use `simpleITK` instead.
 
