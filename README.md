@@ -13,7 +13,10 @@ pytorch`
 
 # Folders
 
-** Datagen:** Codes for generating point cloud from voxel images.
-** Model: ** Randla Net Model codes and training.
-** Voxel Segmentation: ** Codes for segmenting voxels using the trained model.
-** Misc: ** Miscellaneous Codes.
+**1.Datagen:** Codes for generating point cloud from voxel images.
+
+**2.Model:** Randla Net Model codes and training.
+
+**3.Voxel Segmentation:** Codes for segmenting voxels using the trained model.
+
+**4.Misc:** Miscellaneous Codes.
