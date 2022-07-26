@@ -56,7 +56,10 @@ python3 cannyv2.py -h
 ```
 python3 pointcloud.py 
 --edgeDir {Directory for Edges} 
+--imageDir {Directory for Images}
 --segDir {Segmentation Mask Directory} 
+--multiplier {The downsampling rate of the images from the original images, default 4 which means image shapes are x/4, x=original size}
+--nbr_fs {Shape for Neighborhood intensity samples. If value=k, the kxkxk neighborhood values are collected}
 --outputDir {Directory to save Point Cloud CSV}
 ```
 
