@@ -1,22 +1,69 @@
-Python codes for generating point clouds
+This module deals with Point cloud generation from voxel images using canny detector
 
-### 1. Libraries needed
+# Required libraries
+` Numpy,
+ Open3d,
+ nibabel,
+tqdm,
+pandas,
+itk,
+pytorch`
 
-1. numpy ```pip install numpy```
-2. nibabel ```pip install nibabel```
-3. pandas ```pip install pandas```
-4. open3d ```pip install open3d```. [Click here](http://www.open3d.org/) for more.
+`itk` may not work in Mac M1, use `simpleITK` instead.
 
-### 2. To Run
+# To generate point cloud from 3d Voxel image
 
-To create point clouds from visceral dataset
+### (Optional) for CtOrg
+The Ctorg dataset has same labels for right and left kidney, if you want to label them separately, then the run the following code
 
-``` python3 pointcloud.py --imageDir {Image Directory} --segDir {Segmentation Mask Directory}```
+```
+python3 ctOrgSeg.py 
+--segDir (The segmentation Directory)
+```
 
-For help
+### 1. Edge Detection
 
-``` python3 pointcloud.py -h ```
+For windows, Linux, Intel Macs
+``` 
+python3 canny.py 
+--inputDir {Input Image Directory} 
+--outputDir { Output Image Directory for Saving} 
+--variance 
+--lowerT {Lower Threshold (defaut 20)} 
+--upperT {Upper Threshold(default 50)}
+```
+```
+# For more Help
+python3 canny.py -h
+```
 
-### 3. To Visualize after point cloud generation
+For Mac M1
+``` 
+python3 cannyv2.py 
+--inputDir {Input Image Directory} 
+--outputDir { Output Image Directory for Saving} 
+--variance 
+--lowerT {Lower Threshold (defaut 20)} 
+--upperT {Upper Threshold(default 50)}
+```
+```
+# For more Help
+python3 cannyv2.py -h
+```
 
-``` python3 visualize.py --csvPath {Csv Path} ```
+### 2. Point Cloud Generation
+
+```
+python3 pointcloud.py 
+--edgeDir {Directory for Edges} 
+--segDir {Segmentation Mask Directory} 
+--outputDir {Directory to save Point Cloud CSV}
+```
+
+### 3. Visualize
+```
+python3 visualize.py 
+--csvPath {Path for point cloud CSV} 
+--label {all,no_background,liver,spleen,urinary bladder,gallbladder,right kidney,left kdiney,pancreas}
+--downsample {Voxel Downsampling (default 0)}
+```
