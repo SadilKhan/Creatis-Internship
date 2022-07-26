@@ -4,6 +4,7 @@ import nibabel as nib
 from utils import *
 
 def gradient(imageName,save=False,outputDir=None):
+    """ Calculation of gradient values """
 
     image=transform_to_ras(imageName)
     imageData=image.get_fdata()
