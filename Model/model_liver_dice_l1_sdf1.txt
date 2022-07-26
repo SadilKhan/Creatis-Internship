@@ -1,0 +1,1261 @@
+=== EPOCH 1/300 ===
+
+
+
+Training loss: 1120102.6328125	Validation loss: 835270.9531250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.154 | 0.603 | 0.161
+Validation:   | 0.323 | 0.338 | 0.324
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.153 | 0.011 | 0.082
+Validation:   | 0.320 | 0.009 | 0.164
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.961 | 0.011
+Validation:   | 0.967 | 0.009
+Time elapsed: 1 min 60 s
+=== EPOCH 2/300 ===
+
+
+
+Training loss: 759026.1386719	Validation loss: 573794.4843750	
+Recall        |     0 |     1 |  OR
+Training:     | 0.472 | 0.276 | 0.469
+Validation:   | 0.591 | 0.349 | 0.587
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.467 | 0.008 | 0.238
+Validation:   | 0.584 | 0.014 | 0.299
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.977 | 0.009
+Validation:   | 0.982 | 0.015
+Time elapsed: 1 min 55 s
+=== EPOCH 3/300 ===
+
+
+
+Training loss: 534436.9433594	Validation loss: 405148.1953125	
+Recall        |     0 |     1 |  OR
+Training:     | 0.674 | 0.331 | 0.669
+Validation:   | 0.748 | 0.380 | 0.742
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.667 | 0.016 | 0.341
+Validation:   | 0.741 | 0.024 | 0.382
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.985 | 0.016
+Validation:   | 0.986 | 0.025
+Time elapsed: 1 min 54 s
+=== EPOCH 4/300 ===
+
+
+
+Training loss: 385885.3857422	Validation loss: 305588.4843750	
+Recall        |     0 |     1 |  OR
+Training:     | 0.790 | 0.370 | 0.783
+Validation:   | 0.835 | 0.358 | 0.827
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.782 | 0.026 | 0.404
+Validation:   | 0.826 | 0.033 | 0.429
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.988 | 0.027
+Validation:   | 0.987 | 0.035
+Time elapsed: 1 min 56 s
+=== EPOCH 5/300 ===
+
+
+
+Training loss: 300800.5234375	Validation loss: 250778.9531250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.853 | 0.363 | 0.846
+Validation:   | 0.874 | 0.337 | 0.865
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.845 | 0.035 | 0.440
+Validation:   | 0.864 | 0.039 | 0.452
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.037
+Validation:   | 0.987 | 0.043
+Time elapsed: 1 min 53 s
+=== EPOCH 6/300 ===
+
+
+
+Training loss: 251045.6259766	Validation loss: 215847.8476562	
+Recall        |     0 |     1 |  OR
+Training:     | 0.881 | 0.327 | 0.873
+Validation:   | 0.892 | 0.333 | 0.883
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.872 | 0.037 | 0.455
+Validation:   | 0.882 | 0.044 | 0.463
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.041
+Validation:   | 0.987 | 0.049
+Time elapsed: 1 min 54 s
+=== EPOCH 7/300 ===
+
+
+
+Training loss: 221372.0761719	Validation loss: 198415.2031250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.900 | 0.307 | 0.891
+Validation:   | 0.895 | 0.358 | 0.886
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.891 | 0.041 | 0.466
+Validation:   | 0.885 | 0.049 | 0.467
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.045
+Validation:   | 0.988 | 0.054
+Time elapsed: 1 min 53 s
+=== EPOCH 8/300 ===
+
+
+
+Training loss: 203710.8857422	Validation loss: 189900.9257812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.917 | 0.278 | 0.907
+Validation:   | 0.894 | 0.389 | 0.885
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.907 | 0.044 | 0.475
+Validation:   | 0.885 | 0.053 | 0.469
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.988 | 0.050
+Validation:   | 0.988 | 0.058
+Time elapsed: 1 min 54 s
+=== EPOCH 9/300 ===
+
+
+
+Training loss: 190408.7353516	Validation loss: 179166.0312500	
+Recall        |     0 |     1 |  OR
+Training:     | 0.924 | 0.286 | 0.915
+Validation:   | 0.904 | 0.390 | 0.896
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.914 | 0.048 | 0.481
+Validation:   | 0.895 | 0.058 | 0.476
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.988 | 0.055
+Validation:   | 0.988 | 0.064
+Time elapsed: 1 min 53 s
+=== EPOCH 10/300 ===
+
+
+
+Training loss: 180356.2304688	Validation loss: 175109.4882812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.927 | 0.307 | 0.918
+Validation:   | 0.906 | 0.425 | 0.897
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.917 | 0.053 | 0.485
+Validation:   | 0.897 | 0.064 | 0.480
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.061
+Validation:   | 0.989 | 0.070
+Time elapsed: 1 min 55 s
+=== EPOCH 11/300 ===
+
+
+
+Training loss: 173461.9941406	Validation loss: 169539.3085938	
+Recall        |     0 |     1 |  OR
+Training:     | 0.931 | 0.309 | 0.921
+Validation:   | 0.907 | 0.456 | 0.899
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.921 | 0.056 | 0.488
+Validation:   | 0.898 | 0.069 | 0.484
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.064
+Validation:   | 0.990 | 0.075
+Time elapsed: 1 min 54 s
+=== EPOCH 12/300 ===
+
+
+
+Training loss: 168951.9023438	Validation loss: 165588.8085938	
+Recall        |     0 |     1 |  OR
+Training:     | 0.934 | 0.306 | 0.925
+Validation:   | 0.908 | 0.459 | 0.901
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.924 | 0.057 | 0.491
+Validation:   | 0.900 | 0.070 | 0.485
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.067
+Validation:   | 0.990 | 0.077
+Time elapsed: 1 min 56 s
+=== EPOCH 13/300 ===
+
+
+
+Training loss: 162969.6943359	Validation loss: 158482.0156250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.937 | 0.306 | 0.928
+Validation:   | 0.920 | 0.402 | 0.911
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.927 | 0.060 | 0.493
+Validation:   | 0.911 | 0.069 | 0.490
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.070
+Validation:   | 0.989 | 0.078
+Time elapsed: 1 min 60 s
+=== EPOCH 14/300 ===
+
+
+
+Training loss: 158729.9179688	Validation loss: 158469.1875000	
+Recall        |     0 |     1 |  OR
+Training:     | 0.935 | 0.328 | 0.926
+Validation:   | 0.913 | 0.461 | 0.905
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.926 | 0.062 | 0.494
+Validation:   | 0.905 | 0.074 | 0.489
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.072
+Validation:   | 0.990 | 0.081
+Time elapsed: 2 min 00 s
+=== EPOCH 15/300 ===
+
+
+
+Training loss: 156453.3154297	Validation loss: 156041.2226562	
+Recall        |     0 |     1 |  OR
+Training:     | 0.940 | 0.305 | 0.931
+Validation:   | 0.911 | 0.484 | 0.904
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.930 | 0.061 | 0.496
+Validation:   | 0.903 | 0.076 | 0.490
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.072
+Validation:   | 0.990 | 0.083
+Time elapsed: 2 min 02 s
+=== EPOCH 16/300 ===
+
+
+
+Training loss: 153599.5761719	Validation loss: 151562.1132812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.938 | 0.331 | 0.929
+Validation:   | 0.919 | 0.457 | 0.912
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.929 | 0.066 | 0.497
+Validation:   | 0.911 | 0.078 | 0.494
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.077
+Validation:   | 0.990 | 0.086
+Time elapsed: 2 min 01 s
+=== EPOCH 17/300 ===
+
+
+
+Training loss: 149534.6894531	Validation loss: 151191.5117188	
+Recall        |     0 |     1 |  OR
+Training:     | 0.941 | 0.320 | 0.932
+Validation:   | 0.917 | 0.474 | 0.909
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.931 | 0.066 | 0.499
+Validation:   | 0.908 | 0.079 | 0.494
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.078
+Validation:   | 0.990 | 0.086
+Time elapsed: 2 min 01 s
+=== EPOCH 18/300 ===
+
+
+
+Training loss: 146413.6445312	Validation loss: 150226.2031250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.943 | 0.322 | 0.934
+Validation:   | 0.913 | 0.514 | 0.907
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.934 | 0.067 | 0.501
+Validation:   | 0.906 | 0.083 | 0.494
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.080
+Validation:   | 0.991 | 0.090
+Time elapsed: 2 min 01 s
+=== EPOCH 19/300 ===
+
+
+
+Training loss: 144920.3940430	Validation loss: 150031.9570312	
+Recall        |     0 |     1 |  OR
+Training:     | 0.944 | 0.326 | 0.935
+Validation:   | 0.910 | 0.525 | 0.903
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.934 | 0.069 | 0.502
+Validation:   | 0.903 | 0.082 | 0.492
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.082
+Validation:   | 0.991 | 0.089
+Time elapsed: 1 min 59 s
+=== EPOCH 20/300 ===
+
+
+
+Training loss: 143377.5400391	Validation loss: 147226.0781250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.945 | 0.326 | 0.936
+Validation:   | 0.914 | 0.510 | 0.907
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.935 | 0.070 | 0.502
+Validation:   | 0.906 | 0.082 | 0.494
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.083
+Validation:   | 0.991 | 0.089
+Time elapsed: 1 min 60 s
+=== EPOCH 21/300 ===
+
+
+
+Training loss: 141290.1596680	Validation loss: 147998.9648438	
+Recall        |     0 |     1 |  OR
+Training:     | 0.944 | 0.342 | 0.935
+Validation:   | 0.910 | 0.543 | 0.904
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.935 | 0.073 | 0.504
+Validation:   | 0.903 | 0.085 | 0.494
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.086
+Validation:   | 0.991 | 0.091
+Time elapsed: 2 min 04 s
+=== EPOCH 22/300 ===
+
+
+
+Training loss: 139869.3720703	Validation loss: 140456.9023438	
+Recall        |     0 |     1 |  OR
+Training:     | 0.947 | 0.324 | 0.938
+Validation:   | 0.924 | 0.496 | 0.916
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.937 | 0.071 | 0.504
+Validation:   | 0.916 | 0.088 | 0.502
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.086
+Validation:   | 0.991 | 0.097
+Time elapsed: 2 min 01 s
+=== EPOCH 23/300 ===
+
+
+
+Training loss: 137755.1250000	Validation loss: 136587.3281250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.944 | 0.350 | 0.935
+Validation:   | 0.935 | 0.445 | 0.926
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.935 | 0.075 | 0.505
+Validation:   | 0.926 | 0.090 | 0.508
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.088
+Validation:   | 0.990 | 0.101
+Time elapsed: 1 min 58 s
+=== EPOCH 24/300 ===
+
+
+
+Training loss: 136135.3120117	Validation loss: 147006.7382812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.948 | 0.322 | 0.939
+Validation:   | 0.905 | 0.573 | 0.899
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.939 | 0.072 | 0.506
+Validation:   | 0.898 | 0.085 | 0.492
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.087
+Validation:   | 0.992 | 0.091
+Time elapsed: 1 min 58 s
+=== EPOCH 25/300 ===
+
+
+
+Training loss: 136019.9912109	Validation loss: 141366.6347656	
+Recall        |     0 |     1 |  OR
+Training:     | 0.948 | 0.332 | 0.939
+Validation:   | 0.917 | 0.549 | 0.910
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.939 | 0.074 | 0.507
+Validation:   | 0.909 | 0.091 | 0.500
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.090
+Validation:   | 0.991 | 0.099
+Time elapsed: 1 min 59 s
+=== EPOCH 26/300 ===
+
+
+
+Training loss: 133477.5297852	Validation loss: 134635.7187500	
+Recall        |     0 |     1 |  OR
+Training:     | 0.950 | 0.331 | 0.941
+Validation:   | 0.930 | 0.488 | 0.922
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.941 | 0.077 | 0.509
+Validation:   | 0.922 | 0.093 | 0.507
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.092
+Validation:   | 0.990 | 0.104
+Time elapsed: 1 min 59 s
+=== EPOCH 27/300 ===
+
+
+
+Training loss: 133166.1860352	Validation loss: 134703.1679688	
+Recall        |     0 |     1 |  OR
+Training:     | 0.949 | 0.348 | 0.940
+Validation:   | 0.931 | 0.482 | 0.924
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.940 | 0.079 | 0.509
+Validation:   | 0.923 | 0.094 | 0.508
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.095
+Validation:   | 0.990 | 0.104
+Time elapsed: 1 min 55 s
+=== EPOCH 28/300 ===
+
+
+
+Training loss: 131849.7167969	Validation loss: 137353.2402344	
+Recall        |     0 |     1 |  OR
+Training:     | 0.949 | 0.346 | 0.940
+Validation:   | 0.922 | 0.530 | 0.915
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.940 | 0.079 | 0.509
+Validation:   | 0.915 | 0.093 | 0.504
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.094
+Validation:   | 0.991 | 0.101
+Time elapsed: 1 min 56 s
+=== EPOCH 29/300 ===
+
+
+
+Training loss: 131005.2080078	Validation loss: 137738.7246094	
+Recall        |     0 |     1 |  OR
+Training:     | 0.950 | 0.347 | 0.941
+Validation:   | 0.918 | 0.550 | 0.912
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.940 | 0.079 | 0.510
+Validation:   | 0.911 | 0.093 | 0.502
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.095
+Validation:   | 0.991 | 0.100
+Time elapsed: 1 min 54 s
+=== EPOCH 30/300 ===
+
+
+
+Training loss: 129898.0327148	Validation loss: 134925.3789062	
+Recall        |     0 |     1 |  OR
+Training:     | 0.952 | 0.332 | 0.942
+Validation:   | 0.925 | 0.509 | 0.918
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.942 | 0.078 | 0.510
+Validation:   | 0.918 | 0.092 | 0.505
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.095
+Validation:   | 0.991 | 0.102
+Time elapsed: 1 min 55 s
+=== EPOCH 31/300 ===
+
+
+
+Training loss: 129526.6606445	Validation loss: 131569.6503906	
+Recall        |     0 |     1 |  OR
+Training:     | 0.950 | 0.348 | 0.941
+Validation:   | 0.932 | 0.497 | 0.925
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.941 | 0.081 | 0.511
+Validation:   | 0.924 | 0.097 | 0.511
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.097
+Validation:   | 0.991 | 0.108
+Time elapsed: 1 min 55 s
+=== EPOCH 32/300 ===
+
+
+
+Training loss: 128677.9287109	Validation loss: 135658.9101562	
+Recall        |     0 |     1 |  OR
+Training:     | 0.951 | 0.345 | 0.942
+Validation:   | 0.923 | 0.523 | 0.916
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.941 | 0.081 | 0.511
+Validation:   | 0.915 | 0.092 | 0.504
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.097
+Validation:   | 0.991 | 0.101
+Time elapsed: 1 min 56 s
+=== EPOCH 33/300 ===
+
+
+
+Training loss: 127347.6845703	Validation loss: 133588.3300781	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.339 | 0.944
+Validation:   | 0.928 | 0.510 | 0.921
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.081 | 0.512
+Validation:   | 0.920 | 0.095 | 0.508
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.097
+Validation:   | 0.991 | 0.105
+Time elapsed: 1 min 54 s
+=== EPOCH 34/300 ===
+
+
+
+Training loss: 126499.5834961	Validation loss: 132872.8945312	
+Recall        |     0 |     1 |  OR
+Training:     | 0.951 | 0.349 | 0.943
+Validation:   | 0.925 | 0.533 | 0.919
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.942 | 0.082 | 0.512
+Validation:   | 0.918 | 0.097 | 0.507
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.099
+Validation:   | 0.991 | 0.106
+Time elapsed: 1 min 56 s
+=== EPOCH 35/300 ===
+
+
+
+Training loss: 126236.1215820	Validation loss: 135079.6992188	
+Recall        |     0 |     1 |  OR
+Training:     | 0.951 | 0.349 | 0.942
+Validation:   | 0.918 | 0.566 | 0.912
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.942 | 0.081 | 0.511
+Validation:   | 0.911 | 0.095 | 0.503
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.097
+Validation:   | 0.992 | 0.102
+Time elapsed: 1 min 53 s
+=== EPOCH 36/300 ===
+
+
+
+Training loss: 125459.7988281	Validation loss: 128861.9667969	
+Recall        |     0 |     1 |  OR
+Training:     | 0.952 | 0.346 | 0.943
+Validation:   | 0.931 | 0.514 | 0.924
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.942 | 0.082 | 0.512
+Validation:   | 0.924 | 0.100 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.099
+Validation:   | 0.991 | 0.110
+Time elapsed: 1 min 54 s
+=== EPOCH 37/300 ===
+
+
+
+Training loss: 124332.8759766	Validation loss: 131435.3339844	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.350 | 0.944
+Validation:   | 0.927 | 0.536 | 0.920
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.083 | 0.513
+Validation:   | 0.919 | 0.099 | 0.509
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.101
+Validation:   | 0.991 | 0.108
+Time elapsed: 1 min 53 s
+=== EPOCH 38/300 ===
+
+
+
+Training loss: 124579.7138672	Validation loss: 136357.0625000	
+Recall        |     0 |     1 |  OR
+Training:     | 0.952 | 0.352 | 0.943
+Validation:   | 0.915 | 0.575 | 0.909
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.083 | 0.513
+Validation:   | 0.908 | 0.094 | 0.501
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.100
+Validation:   | 0.992 | 0.101
+Time elapsed: 1 min 54 s
+=== EPOCH 39/300 ===
+
+
+
+Training loss: 124896.0327148	Validation loss: 136425.7929688	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.344 | 0.943
+Validation:   | 0.913 | 0.582 | 0.907
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.081 | 0.512
+Validation:   | 0.906 | 0.093 | 0.500
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.099
+Validation:   | 0.992 | 0.100
+Time elapsed: 1 min 55 s
+=== EPOCH 40/300 ===
+
+
+
+Training loss: 123445.7304688	Validation loss: 132739.4980469	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.346 | 0.945
+Validation:   | 0.918 | 0.587 | 0.913
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.084 | 0.514
+Validation:   | 0.912 | 0.099 | 0.505
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.102
+Validation:   | 0.992 | 0.107
+Time elapsed: 1 min 54 s
+=== EPOCH 41/300 ===
+
+
+
+Training loss: 122861.5078125	Validation loss: 127599.9550781	
+Recall        |     0 |     1 |  OR
+Training:     | 0.952 | 0.342 | 0.943
+Validation:   | 0.932 | 0.514 | 0.924
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.081 | 0.512
+Validation:   | 0.924 | 0.099 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.099
+Validation:   | 0.991 | 0.110
+Time elapsed: 1 min 54 s
+=== EPOCH 42/300 ===
+
+
+
+Training loss: 124085.6210938	Validation loss: 129878.8281250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.345 | 0.945
+Validation:   | 0.926 | 0.539 | 0.919
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.083 | 0.514
+Validation:   | 0.919 | 0.098 | 0.509
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.101
+Validation:   | 0.991 | 0.108
+Time elapsed: 1 min 53 s
+=== EPOCH 43/300 ===
+
+
+
+Training loss: 122025.6923828	Validation loss: 128407.2890625	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.341 | 0.945
+Validation:   | 0.931 | 0.523 | 0.924
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.083 | 0.514
+Validation:   | 0.923 | 0.101 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.101
+Validation:   | 0.991 | 0.111
+Time elapsed: 1 min 54 s
+=== EPOCH 44/300 ===
+
+
+
+Training loss: 122161.9135742	Validation loss: 129372.6503906	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.352 | 0.945
+Validation:   | 0.928 | 0.530 | 0.921
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.086 | 0.515
+Validation:   | 0.920 | 0.098 | 0.509
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.104
+Validation:   | 0.991 | 0.108
+Time elapsed: 1 min 53 s
+=== EPOCH 45/300 ===
+
+
+
+Training loss: 121652.1440430	Validation loss: 130625.3769531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.364 | 0.944
+Validation:   | 0.923 | 0.562 | 0.916
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.086 | 0.515
+Validation:   | 0.916 | 0.099 | 0.507
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.104
+Validation:   | 0.992 | 0.107
+Time elapsed: 1 min 54 s
+=== EPOCH 46/300 ===
+
+
+
+Training loss: 121254.6127930	Validation loss: 126906.0507812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.345 | 0.945
+Validation:   | 0.933 | 0.502 | 0.926
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.084 | 0.515
+Validation:   | 0.925 | 0.099 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.103
+Validation:   | 0.991 | 0.110
+Time elapsed: 1 min 53 s
+=== EPOCH 47/300 ===
+
+
+
+Training loss: 121871.6757812	Validation loss: 124826.5917969	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.347 | 0.945
+Validation:   | 0.936 | 0.499 | 0.928
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.084 | 0.514
+Validation:   | 0.927 | 0.102 | 0.515
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.102
+Validation:   | 0.991 | 0.113
+Time elapsed: 1 min 53 s
+=== EPOCH 48/300 ===
+
+
+
+Training loss: 120904.2568359	Validation loss: 125139.6562500	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.336 | 0.946
+Validation:   | 0.935 | 0.501 | 0.928
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.083 | 0.515
+Validation:   | 0.927 | 0.102 | 0.514
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.102
+Validation:   | 0.991 | 0.113
+Time elapsed: 1 min 53 s
+=== EPOCH 49/300 ===
+
+
+
+Training loss: 120573.3588867	Validation loss: 126649.1621094	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.351 | 0.945
+Validation:   | 0.931 | 0.528 | 0.924
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.086 | 0.515
+Validation:   | 0.924 | 0.102 | 0.513
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.104
+Validation:   | 0.991 | 0.112
+Time elapsed: 1 min 54 s
+=== EPOCH 50/300 ===
+
+
+
+Training loss: 119534.2993164	Validation loss: 125809.9980469	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.356 | 0.945
+Validation:   | 0.933 | 0.526 | 0.926
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.087 | 0.516
+Validation:   | 0.925 | 0.104 | 0.514
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.115
+Time elapsed: 1 min 53 s
+=== EPOCH 51/300 ===
+
+
+
+Training loss: 120186.7216797	Validation loss: 129645.7871094	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.353 | 0.946
+Validation:   | 0.922 | 0.576 | 0.916
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.087 | 0.517
+Validation:   | 0.915 | 0.100 | 0.507
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.992 | 0.108
+Time elapsed: 1 min 53 s
+=== EPOCH 52/300 ===
+
+
+
+Training loss: 118543.5913086	Validation loss: 125099.1425781	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.352 | 0.947
+Validation:   | 0.935 | 0.510 | 0.927
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.087 | 0.517
+Validation:   | 0.927 | 0.103 | 0.515
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.114
+Time elapsed: 1 min 53 s
+=== EPOCH 53/300 ===
+
+
+
+Training loss: 119265.1411133	Validation loss: 128043.3125000	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.359 | 0.945
+Validation:   | 0.925 | 0.564 | 0.918
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.087 | 0.516
+Validation:   | 0.917 | 0.101 | 0.509
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.104
+Validation:   | 0.992 | 0.110
+Time elapsed: 1 min 53 s
+=== EPOCH 54/300 ===
+
+
+
+Training loss: 119781.7241211	Validation loss: 125457.7871094	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.340 | 0.947
+Validation:   | 0.932 | 0.531 | 0.925
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.084 | 0.515
+Validation:   | 0.924 | 0.103 | 0.514
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.103
+Validation:   | 0.991 | 0.114
+Time elapsed: 1 min 53 s
+=== EPOCH 55/300 ===
+
+
+
+Training loss: 119571.0756836	Validation loss: 122240.3144531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.357 | 0.946
+Validation:   | 0.944 | 0.471 | 0.935
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.088 | 0.516
+Validation:   | 0.935 | 0.106 | 0.520
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.990 | 0.121
+Time elapsed: 1 min 54 s
+=== EPOCH 56/300 ===
+
+
+
+Training loss: 118870.4238281	Validation loss: 127519.2460938	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.334 | 0.947
+Validation:   | 0.928 | 0.532 | 0.921
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.084 | 0.515
+Validation:   | 0.921 | 0.099 | 0.510
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.103
+Validation:   | 0.991 | 0.109
+Time elapsed: 1 min 53 s
+=== EPOCH 57/300 ===
+
+
+
+Training loss: 119180.3764648	Validation loss: 128716.2734375	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.360 | 0.946
+Validation:   | 0.923 | 0.569 | 0.917
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.088 | 0.517
+Validation:   | 0.916 | 0.101 | 0.508
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.107
+Validation:   | 0.992 | 0.109
+Time elapsed: 1 min 53 s
+=== EPOCH 58/300 ===
+
+
+
+Training loss: 117759.7495117	Validation loss: 122841.8378906	
+Recall        |     0 |     1 |  OR
+Training:     | 0.955 | 0.354 | 0.946
+Validation:   | 0.938 | 0.499 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.087 | 0.516
+Validation:   | 0.930 | 0.105 | 0.517
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.117
+Time elapsed: 1 min 53 s
+=== EPOCH 59/300 ===
+
+
+
+Training loss: 118783.9628906	Validation loss: 123237.3789062	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.356 | 0.945
+Validation:   | 0.938 | 0.494 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.087 | 0.516
+Validation:   | 0.930 | 0.104 | 0.517
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.117
+Time elapsed: 1 min 53 s
+=== EPOCH 60/300 ===
+
+
+
+Training loss: 118204.3056641	Validation loss: 123965.4667969	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.344 | 0.947
+Validation:   | 0.937 | 0.520 | 0.929
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.086 | 0.516
+Validation:   | 0.929 | 0.107 | 0.518
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.119
+Time elapsed: 1 min 53 s
+=== EPOCH 61/300 ===
+
+
+
+Training loss: 118464.9965820	Validation loss: 123040.1230469	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.360 | 0.944
+Validation:   | 0.938 | 0.502 | 0.930
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.087 | 0.515
+Validation:   | 0.930 | 0.105 | 0.517
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.118
+Time elapsed: 1 min 53 s
+=== EPOCH 62/300 ===
+
+
+
+Training loss: 117745.1396484	Validation loss: 121109.9355469	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.338 | 0.948
+Validation:   | 0.942 | 0.491 | 0.935
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.948 | 0.084 | 0.516
+Validation:   | 0.934 | 0.108 | 0.521
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.989 | 0.103
+Validation:   | 0.991 | 0.123
+Time elapsed: 1 min 53 s
+=== EPOCH 63/300 ===
+
+
+
+Training loss: 117369.5791016	Validation loss: 119581.8769531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.958 | 0.338 | 0.949
+Validation:   | 0.944 | 0.472 | 0.936
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.949 | 0.088 | 0.518
+Validation:   | 0.935 | 0.107 | 0.521
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.108
+Validation:   | 0.990 | 0.122
+Time elapsed: 1 min 54 s
+=== EPOCH 64/300 ===
+
+
+
+Training loss: 117469.7290039	Validation loss: 122328.2968750	
+Recall        |     0 |     1 |  OR
+Training:     | 0.955 | 0.353 | 0.946
+Validation:   | 0.938 | 0.504 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.087 | 0.516
+Validation:   | 0.930 | 0.106 | 0.518
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.119
+Time elapsed: 1 min 53 s
+=== EPOCH 65/300 ===
+
+
+
+Training loss: 117532.6625977	Validation loss: 123299.7519531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.372 | 0.945
+Validation:   | 0.935 | 0.531 | 0.928
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.089 | 0.517
+Validation:   | 0.927 | 0.107 | 0.517
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.118
+Time elapsed: 1 min 53 s
+=== EPOCH 66/300 ===
+
+
+
+Training loss: 117724.9301758	Validation loss: 126648.0976562	
+Recall        |     0 |     1 |  OR
+Training:     | 0.955 | 0.356 | 0.946
+Validation:   | 0.927 | 0.561 | 0.920
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.088 | 0.517
+Validation:   | 0.919 | 0.103 | 0.511
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.107
+Validation:   | 0.992 | 0.112
+Time elapsed: 1 min 52 s
+=== EPOCH 67/300 ===
+
+
+
+Training loss: 117646.0253906	Validation loss: 123442.7089844	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.364 | 0.945
+Validation:   | 0.933 | 0.533 | 0.926
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.087 | 0.516
+Validation:   | 0.925 | 0.105 | 0.515
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.116
+Time elapsed: 1 min 53 s
+=== EPOCH 68/300 ===
+
+
+
+Training loss: 117115.0654297	Validation loss: 122277.0546875	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.336 | 0.947
+Validation:   | 0.938 | 0.506 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.085 | 0.516
+Validation:   | 0.930 | 0.107 | 0.519
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.103
+Validation:   | 0.991 | 0.119
+Time elapsed: 1 min 53 s
+=== EPOCH 69/300 ===
+
+
+
+Training loss: 116900.6025391	Validation loss: 122999.2285156	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.342 | 0.948
+Validation:   | 0.939 | 0.501 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.948 | 0.087 | 0.517
+Validation:   | 0.931 | 0.106 | 0.518
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.119
+Time elapsed: 1 min 53 s
+=== EPOCH 70/300 ===
+
+
+
+Training loss: 116867.5258789	Validation loss: 122124.1210938	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.341 | 0.948
+Validation:   | 0.939 | 0.506 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.948 | 0.087 | 0.517
+Validation:   | 0.931 | 0.107 | 0.519
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.107
+Validation:   | 0.991 | 0.120
+Time elapsed: 1 min 54 s
+=== EPOCH 71/300 ===
+
+
+
+Training loss: 118288.5512695	Validation loss: 125112.6132812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.953 | 0.364 | 0.944
+Validation:   | 0.928 | 0.550 | 0.922
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.086 | 0.515
+Validation:   | 0.921 | 0.103 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.104
+Validation:   | 0.992 | 0.113
+Time elapsed: 1 min 53 s
+=== EPOCH 72/300 ===
+
+
+
+Training loss: 116320.0678711	Validation loss: 122456.2031250	
+Recall        |     0 |     1 |  OR
+Training:     | 0.955 | 0.364 | 0.946
+Validation:   | 0.939 | 0.480 | 0.931
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.946 | 0.090 | 0.518
+Validation:   | 0.930 | 0.101 | 0.516
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.108
+Validation:   | 0.990 | 0.114
+Time elapsed: 1 min 51 s
+=== EPOCH 73/300 ===
+
+
+
+Training loss: 117958.7680664	Validation loss: 126349.0761719	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.358 | 0.945
+Validation:   | 0.926 | 0.563 | 0.920
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.087 | 0.516
+Validation:   | 0.919 | 0.102 | 0.511
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.992 | 0.111
+Time elapsed: 1 min 53 s
+=== EPOCH 74/300 ===
+
+
+
+Training loss: 117446.4174805	Validation loss: 126342.7949219	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.348 | 0.947
+Validation:   | 0.927 | 0.563 | 0.920
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.087 | 0.517
+Validation:   | 0.919 | 0.103 | 0.511
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.107
+Validation:   | 0.992 | 0.112
+Time elapsed: 1 min 52 s
+=== EPOCH 75/300 ===
+
+
+
+Training loss: 118157.4731445	Validation loss: 125279.8769531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.351 | 0.945
+Validation:   | 0.930 | 0.543 | 0.923
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.944 | 0.086 | 0.515
+Validation:   | 0.923 | 0.104 | 0.513
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.114
+Time elapsed: 1 min 52 s
+=== EPOCH 76/300 ===
+
+
+
+Training loss: 116676.4687500	Validation loss: 119962.6308594	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.346 | 0.948
+Validation:   | 0.943 | 0.478 | 0.935
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.948 | 0.088 | 0.518
+Validation:   | 0.934 | 0.106 | 0.520
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.107
+Validation:   | 0.990 | 0.121
+Time elapsed: 1 min 52 s
+=== EPOCH 77/300 ===
+
+
+
+Training loss: 116892.2036133	Validation loss: 126164.4218750	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.355 | 0.947
+Validation:   | 0.927 | 0.556 | 0.921
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.089 | 0.518
+Validation:   | 0.920 | 0.103 | 0.512
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.109
+Validation:   | 0.992 | 0.113
+Time elapsed: 1 min 53 s
+=== EPOCH 78/300 ===
+
+
+
+Training loss: 117427.0556641	Validation loss: 123343.8300781	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.348 | 0.947
+Validation:   | 0.934 | 0.523 | 0.927
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.088 | 0.518
+Validation:   | 0.926 | 0.105 | 0.516
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.108
+Validation:   | 0.991 | 0.116
+Time elapsed: 1 min 52 s
+=== EPOCH 79/300 ===
+
+
+
+Training loss: 116828.5844727	Validation loss: 128452.0214844	
+Recall        |     0 |     1 |  OR
+Training:     | 0.955 | 0.367 | 0.946
+Validation:   | 0.919 | 0.594 | 0.913
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.090 | 0.518
+Validation:   | 0.912 | 0.100 | 0.506
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.109
+Validation:   | 0.992 | 0.108
+Time elapsed: 1 min 51 s
+=== EPOCH 80/300 ===
+
+
+
+Training loss: 116060.8862305	Validation loss: 120447.2226562	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.352 | 0.947
+Validation:   | 0.943 | 0.464 | 0.935
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.089 | 0.518
+Validation:   | 0.935 | 0.104 | 0.519
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.109
+Validation:   | 0.990 | 0.118
+Time elapsed: 1 min 52 s
+=== EPOCH 81/300 ===
+
+
+
+Training loss: 117040.9711914	Validation loss: 123759.1894531	
+Recall        |     0 |     1 |  OR
+Training:     | 0.954 | 0.359 | 0.945
+Validation:   | 0.933 | 0.531 | 0.926
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.945 | 0.088 | 0.516
+Validation:   | 0.926 | 0.105 | 0.515
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.116
+Time elapsed: 1 min 51 s
+=== EPOCH 82/300 ===
+
+
+
+Training loss: 116142.0195312	Validation loss: 120272.4648438	
+Recall        |     0 |     1 |  OR
+Training:     | 0.957 | 0.343 | 0.948
+Validation:   | 0.943 | 0.480 | 0.935
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.948 | 0.088 | 0.518
+Validation:   | 0.934 | 0.107 | 0.521
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.108
+Validation:   | 0.990 | 0.121
+Time elapsed: 1 min 53 s
+=== EPOCH 83/300 ===
+
+
+
+Training loss: 117053.6528320	Validation loss: 123989.5507812	
+Recall        |     0 |     1 |  OR
+Training:     | 0.952 | 0.364 | 0.944
+Validation:   | 0.932 | 0.540 | 0.925
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.943 | 0.087 | 0.515
+Validation:   | 0.925 | 0.105 | 0.515
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.105
+Validation:   | 0.991 | 0.116
+Time elapsed: 1 min 52 s
+=== EPOCH 84/300 ===
+
+
+
+Training loss: 116804.4863281	Validation loss: 122383.8183594	
+Recall        |     0 |     1 |  OR
+Training:     | 0.956 | 0.347 | 0.947
+Validation:   | 0.937 | 0.524 | 0.930
+IoU           |     0 |     1 |  mIoU
+Training:     | 0.947 | 0.087 | 0.517
+Validation:   | 0.929 | 0.108 | 0.519
+Precision     |     0 |     1 |  mPrecision
+Training:     | 0.990 | 0.106
+Validation:   | 0.991 | 0.121
+Time elapsed: 1 min 52 s
+=== EPOCH 85/300 ===
