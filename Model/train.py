@@ -1,5 +1,8 @@
-import sys
-sys.path.append("/home/khan/Internship/Codes/Datagen")
+import os,sys
+CURRRENT_DIRECTORY =os.getcwd()
+BASE_DIRECTORY="/".join(CURRRENT_DIRECTORY.split("/")[:-1])
+sys.path.append(BASE_DIRECTORY)
+sys.path.append(BASE_DIRECTORY+"/Datagen")
 from model_utils.metrics import *
 #from model_utils.dice_loss import *
 from model_utils.tools import Config as cfg
@@ -79,7 +82,7 @@ def train(args,csvFiles, train_transforms=False, load=False):
         n_samples= torch.tensor(cfg.class_weights_ctorg,dtype=torch.float,device=args.gpu)
     ratio_samples = n_samples / n_samples.sum()
     weights = 1 / (ratio_samples)
-    criterion=TotalLoss()
+    criterion=TotalSDFLoss()
     
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.adam_lr)
@@ -210,8 +213,7 @@ def train(args,csvFiles, train_transforms=False, load=False):
 
 
 if __name__ == '__main__':
-
-    """Parse program arguments"""
+    
     parser = argparse.ArgumentParser(
         prog='RandLA-Net',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
@@ -322,3 +324,4 @@ if __name__ == '__main__':
     d = t1 - t0
     print('Done. Time elapsed:', '{:.0f} s.'.format(
         d) if d < 60 else '{:.0f} min {:.0f} s.'.format(*divmod(d, 60)))
+
