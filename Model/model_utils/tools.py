@@ -12,24 +12,21 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'utils'))
 
-import cpp_wrappers.cpp_subsampling.grid_subsampling as cpp_subsampling
-
 class Config:
     sampling_type = 'active_learning'
     #class_weights_visceral=[207194.95, 5628.1, 23958, 860.1, 1123.25, 1048.4]
     class_weights_visceral=[207194.95, 23958]
     class_weights_ctorg=[213092,5554,16651,610,1408,1419]
 
-def heavisideFn(x,k=750):
+def heavisideFn(x,k=750,t=0):
     """ Approximation of Heaviside Function """
-    return 1-(1/(1+torch.exp(-2*k*x)))
+    return 1-(1/(1+torch.exp(-2*k*(x-t))))
+
 def DiceLoss(pred,true,smooth=1e-7,weights=1):
-    
     N=pred.shape[1]
     intersect=torch.sum(weights*pred*true)
     sumPred=torch.sum(weights*pred**2)
     sumTrue=torch.sum(true**2)
-    #print(intersect,sumPred,sumTrue)
     diceLoss=1-2*(intersect+smooth)/(sumPred+sumTrue+smooth)
     
     return diceLoss
@@ -54,6 +51,7 @@ class PcLoss(nn.Module):
 
 class SALoss(nn.Module):
     def __init__(self,alpha=0.7,beta=1.5,weight=[],aggregate="mean"):
+        """ Structure Aware Loss Function """
         super().__init__()
         self.alpha=0.7
         self.beta=1.5
@@ -93,9 +91,7 @@ class SALoss(nn.Module):
             g=torch.sigmoid(torch.sum((point_i-mean_point_i)**2,dim=-1)**0.5) # points are already normalized (B,N1)
             mean_emb_i=torch.mean(embedding[:,pos],dim=1).unsqueeze(-1) # (B,k)
             mean_emb.append(mean_emb_i)
-            #intraLoss_i=g*torch.square(torch.clamp(torch.sum((emb_i-mean_emb_i)**2,dim=-1)**0.5-self.alpha,min=0))
             intraLoss_i=g*(1-torch.cosine_similarity(emb_i.permute((0,2,1)),mean_emb_i))
-            #print(emb_i.max(),mean_emb_i.max(),intraLoss_i)
             if self.aggregate=="mean":
                 intraLoss+=torch.mean(intraLoss_i)
             else:
@@ -106,9 +102,6 @@ class SALoss(nn.Module):
         for i in range(1,M):
             for j in range(1,M):
                 if (i!=j):
-                    #interLoss_ij=torch.square(torch.clamp(self.beta-torch.sum((mean_emb[:,i-1]-mean_emb[:,j-1])**2,dim=-1)**0.5,min=0))
-                    #interLoss_ij.to("cuda")
-                    #interLoss_ij.requires_grad=True
                     interLoss_ij=torch.mean(torch.cosine_similarity(mean_emb[:,i-1],mean_emb[:,j-1]))
                     interLoss+=interLoss_ij
         
@@ -122,37 +115,35 @@ def sdf_seg_loss(predSeg,trueSeg,segSDF):
     return loss        
 
 
-class TotalLoss(nn.Module):
-    def __init__(self,seg_loss_type="ce",delta=1,weights=None,lamda1=1,lamda2=10,lamda3=5):
-        super(TotalLoss, self).__init__()
+class TotalSDFLoss(nn.Module):
+    def __init__(self,seg_loss_type="ce",delta=0.01,lamda1=1,lamda2=10):
+        super(TotalSDFLoss, self).__init__()
         self.seg_loss_type = seg_loss_type
-        self.weights = weights
+        self.delta = delta # Lowering the delta value will put more weights on boundary learning
         self.lamda1 = lamda1
         self.lamda2 = lamda2
-        self.lamda3 = lamda3
 
-        self.saLoss= SALoss()
 
 
     def forward(self,predSeg,trueSeg,predSDF,trueSDF):
         ratio=trueSeg.unique(return_counts=True)[1]/torch.numel(trueSeg)
-        #print(weights)
-        weights=1/ratio[predSDF.long()]
-        self.loss1=DiceLoss(predSeg,trueSeg,1e-7,weights)
-        #self.loss2=AAAI_sdf_loss(predSDF,trueSDF,weights)
+        #weights=1/ratio[predSDF.long()]
+        self.loss1=DiceLoss(predSeg,trueSeg,1e-7,weights=1)
+        self.loss2=AAAI_sdf_loss(predSDF,trueSDF,self.delta)
 
-        loss=self.loss1
-        #print(loss)
+        loss=self.loss1+self.lamda2*self.loss2
         return loss
 
 
 
 # Loss for Signed Distance Function
-def AAAI_sdf_loss(net_output, gt_sdm,weights=1):
+def AAAI_sdf_loss(net_output, gt_sdm,delta):
     """ From https://github.com/JunMa11/SegWithDistMap/blob/master/code/train_LA_AAAISDF.py"""
     smooth = 1e-5
+    # Clamp the values between [-delta,delta]
+    net_output=torch.clamp(net_output,min=-delta,max=delta)
+    gt_sdm=torch.clamp(gt_sdm,min=-delta,max=delta)
     # Calculate the product loss
-    #weights=1/(torch.abs(gt_sdm)+smooth)
     intersect = net_output * gt_sdm
     pd_sum = net_output ** 2
     gt_sum = gt_sdm ** 2
@@ -194,10 +185,6 @@ class FPCrossEntropyLoss(nn.Module):
             pos_i=(true==i).nonzero()[:,1]
             pred_i=pred[:,:,pos_i]
             pred_label_i=pred_i.argmax(dim=1) # The prediction Label
-            """            if i==0:
-                weight_i=w[:,pred_label_i[0]]
-                w_sum+=torch.sum(weight_i*freq[:,i])
-            else:"""
             weight_i=w[i]
             weight_i=w[:,pred_label_i[0]]
             w_sum+=torch.sum(weight_i)
@@ -205,77 +192,3 @@ class FPCrossEntropyLoss(nn.Module):
             loss+=torch.sum(-1*weight_i*torch.log(pred_i[:,i,:]))
     
         return loss/w_sum
-
-class FPCELossV2(nn.Module):
-    """ Cross Entopy Loss which takes into account the all the false positive error"""
-    def __init__(self):
-        super(FPCELossV2, self).__init__()
-        pass
-    def forward(self,pred,true,weight="bfn"):
-        """
-        pred: shape (B,C,N)
-        true: shape (B,N)
-        """
-        pred=F.softmax(pred,dim=1)
-        M=pred.size(1)
-        loss=0
-        if weight=="cm":
-            # Calculate Weights
-            pred_label=pred.argmax(dim=1)
-            cm=confusion_matrix(true[0].cpu(),pred_label[0].cpu())
-            cm+=1
-            cmRatio=cm/cm.sum()
-            w=calculate_weight(cmRatio) # Updates weights for error cell
-            #np.fill_diagonal(w,np.diagonal(calculate_weight(1-cmRatio))) # Updates the true positive cell
-            w=torch.tensor(w)
-            w=w.cuda()
-            #w+=0.01
-            w_sum=0
-            for i in range(M):
-                pos_i=(true==i).nonzero()[:,1]
-                pred_i=pred[:,:,pos_i]
-                pred_label_i=pred_i.argmax(dim=1) # The prediction Label
-                weight_i=w[i,pred_label_i[0]]
-                w_sum+=torch.sum(weight_i)
-                loss+=torch.sum(-1*weight_i*torch.log(pred_i[:,i,:]))
-        else:
-            freq=torch.einsum("bch->bh", F.one_hot(true)).type(torch.float32)
-            ratio=freq/torch.sum(freq)
-            w=calculate_weight(ratio)
-            w_sum=0
-            for i in range(M):
-                pos_i=(true==i).nonzero()[:,1]
-                pred_i=pred[:,:,pos_i]
-                pred_label_i=pred_i.argmax(dim=1) # The prediction Label
-                if i==0:
-                    weight_i=w[:,pred_label_i[0]]
-                    w_sum+=torch.sum(weight_i)
-                else:
-                    weight_i=w[:,i]
-                    w_sum+=torch.sum(weight_i*freq[:,i])
-
-                loss+=torch.sum(-1*weight_i*torch.log(pred_i[:,i,:]))
-    
-        return loss/w_sum
-
-    
-class FPCELossV3(nn.Module):
-    """ Cross Entopy Loss which takes into account the all the false positive error"""
-    def __init__(self):
-        super(FPCELossV3, self).__init__()
-        pass
-    def forward(self,pred,true):
-        """
-        pred: shape (B,C,N)
-        true: shape (B,N)
-        """
-        pred=F.softmax(pred,dim=1)
-        M=pred.size(1)
-        N=true.size(1)
-        loss=0
-        for i in range(M):
-            pos_i=(true==i).nonzero()[:,1]
-            pred_i=pred[:,:,pos_i]
-            loss+=torch.sum((-1/pred_i[:,i,:])*torch.log(pred_i[:,i,:]))
-        #print(pred_i)
-        return loss/N
