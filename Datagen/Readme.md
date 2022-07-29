@@ -11,7 +11,7 @@ pytorch`
 
 `itk` may not work in Mac M1, use `simpleITK` instead.
 
-# To generate point cloud from 3d Voxel image
+# To generate point cloud from 3d Voxel image (Code for visceral and ctorg dataset only)
 
 ### (Optional) for CtOrg
 The Ctorg dataset has same labels for right and left kidney, if you want to label them separately, then the run the following code
@@ -64,6 +64,7 @@ python3 pointcloud.py
 ```
 
 ### 3. Visualize
+To visualize the generated point cloud.
 ```
 python3 visualize.py 
 --csvPath {Path for point cloud CSV} 
