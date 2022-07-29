@@ -1,11 +1,9 @@
 from multiprocessing import pool
 import time
 import gc
-from prometheus_client import Metric
 import numpy as np
 import torch
 import torch.nn as nn
-#from model_utils.metrics import findSize,findSizeModel
 from model_utils.knn import findKNN
 from model_utils.tools import heavisideFn 
 import pynanoflann
@@ -85,8 +83,6 @@ class LocalSpatialEncoding(nn.Module):
         features=features.cpu()
 
         B, N, K = idx.size()
-        # idx(B, N, K), coords(B, N, 3)
-        # neighbors[b, i, n, k] = coords[b, idx[b, n, k], i] = expanded_coords[b, i, extended_idx[b, i, n, k], k]
         expanded_idx = idx.unsqueeze(1).expand(B, 3, N, K)
         expanded_coords = coords.transpose(-2,-1).unsqueeze(-1).expand(B, 3, N, K)
         neighbor_coords = torch.gather(expanded_coords, 2, expanded_idx) # shape (B, 3, N, K)
@@ -94,8 +90,6 @@ class LocalSpatialEncoding(nn.Module):
         expanded_idx = idx.unsqueeze(1).expand(B, features.size(1), N, K)
         expanded_features = features.expand(B, -1, N, K)
         neighbor_features = torch.gather(expanded_features, 2, expanded_idx)
-        # if USE_CUDA:
-        #     neighbors = neighbors.cuda()
 
         # relative point position encoding
         concat = torch.cat((
@@ -189,21 +183,16 @@ class LocalFeatureAggregation(nn.Module):
         x = self.mlp1(features)
 
         x = self.lse1(coords, x, knn_output)
-        #print(f"After LSA1, Memory Allocation {torch.cuda.memory_allocated(0)/(1024**3)}")
         gc.collect()
         torch.cuda.empty_cache()
         x = self.pool1(x.to(self.device))
-        #print(f"After Pool1, Memory Allocation {torch.cuda.memory_allocated(0)/(1024**3)}")
         gc.collect()
         torch.cuda.empty_cache()
         x= self.lse2(coords, x, knn_output)
-        #print(f"After LSA2, Memory Allocation {torch.cuda.memory_allocated(0)/(1024**3)}")
         gc.collect()
         torch.cuda.empty_cache()
         x = self.pool2(x.to(self.device))
-        #print(f"After Pool2, Memory Allocation {torch.cuda.memory_allocated(0)/(1024**3)}")
         x=self.lrelu(self.mlp2(x)+self.shortcut(features))
-        #print(f"After Relu, Memory Allocation {torch.cuda.memory_allocated(0)/(1024**3)}")
         # Free Cached Tensors
         gc.collect()
         torch.cuda.empty_cache()
@@ -268,9 +257,9 @@ class RandLANet(nn.Module):
             SharedMLP(16, 64, bn=True, activation_fn=nn.ReLU()),
             SharedMLP(64, 128, bn=True, activation_fn=nn.ReLU()),
         )
-        self.fc_output=SharedMLP(128, num_classes)
-        #self.sdf_output=SharedMLP(128,1)
-        #self.tanh=nn.Tanh()
+        #self.fc_output=SharedMLP(128, num_classes)
+        self.sdf_output=SharedMLP(128,1)
+        self.tanh=nn.Tanh()
         self.device = device
 
         self = self.to(device)
@@ -358,13 +347,15 @@ class RandLANet(nn.Module):
         emb = self.fc_end(x) # Shape (B,d,N,1)
 
        	# For SDF Regression
-        #sdf=self.tanh(self.sdf_output(emb))
-        #sdf=sdf.squeeze(0)
-        #scores=heavisideFn(sdf)
-        #scores=scores.detach()
-        scores=self.fc_output(emb)
-        sdf=scores
-        sdf=sdf.detach()
+        sdf=self.tanh(self.sdf_output(emb))
+        sdf=sdf.squeeze(0)
+        scores=heavisideFn(sdf)
+        scores=scores.detach()
+
+        # For Segmentation (Comment the section SDF Regression and self.tanh,self.sdf_output, uncomment this section and self.fc_output)
+        #scores=self.fc_output(emb)
+        #sdf=scores
+        #sdf=sdf.detach()
 
         return scores.squeeze(-1),sdf.squeeze(-1),emb.squeeze(-1),lv.squeeze(-1),permutation
 
