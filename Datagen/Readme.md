@@ -23,7 +23,7 @@ python3 ctOrgSeg.py
 
 ### 1. Edge Detection
 
-For windows, Linux, Intel Macs
+**For windows, Linux, Intel Macs**
 ``` 
 python3 canny.py 
 --inputDir {Input Image Directory} 
@@ -37,7 +37,7 @@ python3 canny.py
 python3 canny.py -h
 ```
 
-For Mac M1
+**For Mac M1**
 ``` 
 python3 cannyv2.py 
 --inputDir {Input Image Directory} 
