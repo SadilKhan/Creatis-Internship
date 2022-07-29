@@ -6,8 +6,11 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import sys
-sys.path.append("/home/khan/Internship/Codes/Model/")
-sys.path.append("/home/khan/Internship/Codes/Datagen/")
+CURRRENT_DIRECTORY =os.getcwd()
+BASE_DIRECTORY="/".join(CURRRENT_DIRECTORY.split("/")[:-1])
+sys.path.append(BASE_DIRECTORY)
+sys.path.append(BASE_DIRECTORY+"/Datagen")
+sys.path.append(BASE_DIRECTORY+"/Model")
 
 from torch.optim.lr_scheduler import CosineAnnealingLR, StepLR
 from torch.utils.data import DataLoader
