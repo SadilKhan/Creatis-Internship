@@ -38,37 +38,28 @@ def evaluate(model, loader, criterion, device,output):
             labels = labels.to(device)
             sdf=sdf.to(device)
             nbr_intensity=nbr_intensity.to(device)
-            scores,predSdf,_,lv,permutation = model(points,nbr_intensity)
+            scores,predSdf,_,_,_ = model(points,nbr_intensity)
             loss = criterion(scores,labels.float(),predSdf,sdf)
             losses.append(loss.cpu().item())
             accuracies.append(accuracy(scores, labels))
             ious.append(intersection_over_union(scores, labels))
             precisions.append(calculate_precision(scores,labels))
-            #print(f"TEST\nNAME:{name}\nLOSS:{loss}\nIOU:{intersection_over_union(scores, labels)}\nACC:{accuracy(scores, labels)}",file=output)
     return np.mean(losses), np.nanmean(np.array(accuracies), axis=0), np.nanmean(np.array(ious), axis=0),np.nanmean(np.array(precisions), axis=0)
 
 
 def train(args,csvFiles, train_transforms=False, load=False):
     global Path
-    logs_dir = args.logs_dir / args.name
-    logs_dir.mkdir(exist_ok=True, parents=True)
-    
-
-    if args.expr_type == "smote":
-        train_loader = DataLoader(PointCloudDataset(
-            csvFiles["train"], transforms=train_transforms, mode="train", expr_type="smote"), batch_size=args.batch_size)
-    elif args.expr_type=="adasyn":
-        train_loader = DataLoader(PointCloudDataset(
-            csvFiles["train"], transforms=train_transforms, mode="train", expr_type="adasyn"), batch_size=args.batch_size)
-    else:
-        train_loader = DataLoader(PointCloudDataset(
-            csvFiles["train"], transforms=train_transforms, mode="train"), batch_size=args.batch_size)
+    # Load Dataset
+    train_loader = DataLoader(PointCloudDataset(
+        csvFiles["train"], transforms=train_transforms, mode="train"), batch_size=args.batch_size)
 
     val_loader = DataLoader(PointCloudDataset(
             csvFiles["test"], transforms=False, mode="test"), batch_size=args.batch_size)
 
     d_in = next(iter(train_loader))[1].size(-1)
-    num_classes = 2
+    label=next(iter(train_loader))[-2]
+    unique_label = torch.unique(label)
+    num_classes = len(unique_label) 
     model = RandLANet(
         d_in,
         num_classes=num_classes,
@@ -81,21 +72,19 @@ def train(args,csvFiles, train_transforms=False, load=False):
     elif args.dataset_type=="ctorg":
         n_samples= torch.tensor(cfg.class_weights_ctorg,dtype=torch.float,device=args.gpu)
     ratio_samples = n_samples / n_samples.sum()
-    weights = 1 / (ratio_samples)
+    #weights = 1 / (ratio_samples)
     criterion=TotalSDFLoss()
-    
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.adam_lr)
     scheduler = torch.optim.lr_scheduler.ExponentialLR(
         optimizer, args.scheduler_gamma)
 
     first_epoch = 1
-    #for name,val in model.named_parameters():
-    #print(name,"\t",val.requires_grad)
     
     for epoch in range(first_epoch, args.epochs+1):
         output=open(f"{args.model_name}.txt",mode="a+")
         print(f'=== EPOCH {epoch:d}/{args.epochs:d} ===',file=output)
+        print(f"Experiment Name: {args.name}",file=output)
         t0 = time.time()
         # Train
         model.train()
@@ -119,29 +108,25 @@ def train(args,csvFiles, train_transforms=False, load=False):
             nbr_intensity=nbr_intensity.to(args.gpu)
             sdf=sdf.to(args.gpu)
             optimizer.zero_grad()
-            scores,predSdf,_,lv,permutation = model(points,nbr_intensity)
-            #print(outScores.shape)
-
+            scores,predSdf,_,_,_ = model(points,nbr_intensity)
             loss = criterion(scores,labels.float(),predSdf,sdf)
             loss.backward()
-            #print(model.sdf_output.conv.weight)
             optimizer.step()
             losses.append(loss.cpu().item())
             accuracies.append(accuracy(scores, labels))
             ious.append(intersection_over_union(scores, labels))
             precisions.append(calculate_precision(scores,labels))
-            #print(f"TRAIN\nNAME:{name}\nLOSS:{loss}\nIOU:{intersection_over_union(scores, labels)}\nACC:{accuracy(scores, labels)}",file=output)
 
         scheduler.step()
         print("\n\n",file=output)
 
-        accs = np.nanmean(np.array(accuracies), axis=0)
+        recs = np.nanmean(np.array(accuracies), axis=0)
         ious = np.nanmean(np.array(ious), axis=0)
         precisions = np.nanmean(np.array(precisions), axis=0)
         #print(precisions,ious)
         
 
-        val_loss, val_accs, val_ious,val_precisions = evaluate(
+        val_loss, val_recs, val_ious,val_precisions = evaluate(
             model,
             val_loader,
             criterion,
@@ -159,9 +144,9 @@ def train(args,csvFiles, train_transforms=False, load=False):
         }
         acc_dicts = [
             {
-                'Training Recall': acc,
-                'Validation Recall': val_acc
-            } for acc, val_acc in zip(accs, val_accs)
+                'Training Recall': rec,
+                'Validation Recall': val_rec
+            } for rec, val_rec in zip(recs, val_recs)
         ]
         iou_dicts = [
             {
@@ -186,10 +171,10 @@ def train(args,csvFiles, train_transforms=False, load=False):
         print(file=output)
         print('Recall       ', *
             [f'{i:>5d}' for i in range(num_classes)], ' OR', sep=' | ',file=output)
-        print('Training:    ', *[f'{acc:.3f}' if not np.isnan(acc)
-            else '  nan' for acc in accs], sep=' | ',file=output)
-        print('Validation:  ', *[f'{acc:.3f}' if not np.isnan(acc)
-            else '  nan' for acc in val_accs], sep=' | ',file=output)
+        print('Training:    ', *[f'{rec:.3f}' if not np.isnan(rec)
+            else '  nan' for rec in recs], sep=' | ',file=output)
+        print('Validation:  ', *[f'{rec:.3f}' if not np.isnan(rec)
+            else '  nan' for rec in val_recs], sep=' | ',file=output)
 
         print('IoU          ', *
             [f'{i:>5d}' for i in range(num_classes)], ' mIoU', sep=' | ',file=output)
@@ -224,48 +209,29 @@ if __name__ == '__main__':
     dirs = parser.add_argument_group('Storage directories')
     misc = parser.add_argument_group('Miscellaneous')
 
-    base.add_argument('--csvPath', type=str, help='location of the dataset',
-                      default='--csvPath /home/khan/Internship/dataset/Extracted/point_cloud/visceral_7/')
+    base.add_argument('--csvPath', type=str, help='location of the dataset')
 
     expr.add_argument('--epochs', type=int, help='number of epochs',
                       default=300)
     expr.add_argument('--load', type=str, help='model to load',
                       default='')
     expr.add_argument('--dataset_type',type=str,default="visceral")
-    expr.add_argument('--expr_type', type=str,
-                      help="Experiment Type - wm/smote/adasyn", default="wm")
-
     param.add_argument('--adam_lr', type=float, help='learning rate of the optimizer',
                        default=0.0001)
     param.add_argument('--batch_size', type=int, help='batch size',
                        default=1)
     param.add_argument('--decimation', type=int, help='ratio the point cloud is divided by at each layer',
                        default=2)
-    param.add_argument('--dataset_sampling', type=str, help='how dataset is sampled',
-                       default='active_learning', choices=['active_learning', 'naive'])
     param.add_argument('--neighbors', type=int, help='number of neighbors considered by k-NN',
                        default=8)
     param.add_argument('--scheduler_gamma', type=float, help='gamma of the learning rate scheduler',
                        default=0.95)
     param.add_argument("--nsplit",help="Cross Validation N Splits",type=int,default=5)
 
-    dirs.add_argument('--test_dir', type=str, help='location of the test set in the dataset dir',
-                      default='test')
-    dirs.add_argument('--train_dir', type=str, help='location of the training set in the dataset dir',
-                      default='train')
-    dirs.add_argument('--val_dir', type=str, help='location of the validation set in the dataset dir',
-                      default='val')
-    dirs.add_argument('--logs_dir', type=Path, help='path to tensorboard logs',
-                      default='runs')
-
     misc.add_argument('--gpu', type=int, help='which GPU to use (-1 for CPU)',
                       default=0)
     misc.add_argument('--name', type=str, help='name of the experiment',
                       default=None)
-    misc.add_argument('--num_workers', type=int, help='number of threads for loading data',
-                      default=0)
-    misc.add_argument('--save_freq', type=int, help='frequency of saving checkpoints',
-                      default=10)
     misc.add_argument("--model_name",type=str,default="modelv1")
 
     args = parser.parse_args()
@@ -280,17 +246,11 @@ if __name__ == '__main__':
     else:
         args.gpu = torch.device('cpu')
 
-    if args.name is None:
-        if args.load:
-            args.name = args.load
-        else:
-            args.name = datetime.now().strftime('%Y-%m-%d_%H:%M')
-
     t0 = time.time()
  
 
     # n fold cross Validation dataset
-    Path = f"/home/khan/Internship/Codes/{args.model_name}.pth"
+    Path = BASE_DIRECTORY+"/"+f"{args.model_name}.pth"
     csvFiles=np.array(glob(os.path.join(args.csvPath,"*")))
     splitDataset=dict()
     for i in range(args.nsplit):
