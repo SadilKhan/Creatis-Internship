@@ -34,6 +34,7 @@ from model_utils.knn import findKNN
 from utils import *
 
 class VoxelSegmentation:
+    """ Class for segmenting 3D Voxel image using model trained on point cloud"""
     def __init__(self,modelPath,csvPath,imagePath,segPath1,segPath2,neighbor,outputPath,organ):
         self.modelPath = modelPath
         self.csvPath = csvPath
@@ -183,14 +184,15 @@ class VoxelSegmentation:
 def main():
     parser=argparse.ArgumentParser()
 
-    parser.add_argument("--modelPath",default="/home/khan/Internship/Codes/model_sdf2.pth")
-    parser.add_argument("--csvPath",help="CSV Path for point cloud",default="/home/khan/Internship/dataset/oth/pc/10000112_1_CTce_ThAb_edge_20_50_point_cloud.pkl")
-    parser.add_argument("--imagePath",help="Image Path",default="/home/khan/Internship/dataset/visceral/volumes/CTce_ThAb/10000112_1_CTce_ThAb.nii.gz")
-    parser.add_argument("--segPath1",help="Segmentation Path for point cloud",default="/home/khan/Internship/dataset/visceral/segmentations/10000112_1_CTce_ThAb_1326_8.nii.gz")
-    parser.add_argument("--segPath2",help="Segmentation Path for point cloud",default="/home/khan/Internship/dataset/visceral/segmentations/10000112_1_CTce_ThAb_1302_8.nii.gz")
+    parser.add_argument("--modelPath")
+    parser.add_argument("--csvPath",help="CSV Path for point cloud")
+    parser.add_argument("--imagePath",help="Image Path")
+    parser.add_argument("--organ",help="Organ")
+    parser.add_argument("--segPath1",help="Segmentation Mask for organ")
+    # For Lungs only
+    parser.add_argument("--segPath2",help="Second Segmentation Mask for organ. This is only for lungs. Use 'No' instead for all the other organs ")
     parser.add_argument("--neighbor",help="KNN neighbor",type=int,default=8)
-    parser.add_argument("--outputPath",help="Output Path for point cloud",default="/home/khan/Internship/")
-    parser.add_argument("--organ",help="Organ",default="lungs")
+    parser.add_argument("--outputPath",help="Output Path for point cloud")
 
     args=parser.parse_args()
 
